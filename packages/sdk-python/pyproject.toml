@@ -1,0 +1,66 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agenttrace-sdk"
+version = "0.1.0"
+description = "Python SDK for AgentTrace - AI Agent Observability Platform"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+keywords = ["ai", "agents", "observability", "tracing", "llm"]
+authors = [
+  { name = "AgentTrace", email = "hello@agenttrace.io" }
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+  "httpx>=0.27.0",
+  "pydantic>=2.0.0",
+  "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+  "pytest-asyncio>=0.23.0",
+  "black>=24.0.0",
+  "mypy>=1.8.0",
+  "ruff>=0.2.0",
+]
+langchain = ["langchain>=0.1.0"]
+openai = ["openai>=1.0.0"]
+anthropic = ["anthropic>=0.18.0"]
+
+[project.urls]
+Documentation = "https://docs.agenttrace.io"
+Repository = "https://github.com/agenttrace/agenttrace"
+Homepage = "https://agenttrace.io"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/agenttrace"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+[tool.black]
+line-length = 88
+target-version = ["py39"]
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"
