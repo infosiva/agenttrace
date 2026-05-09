@@ -1,4 +1,15 @@
 import { Activity, Clock, DollarSign, TrendingUp, AlertCircle } from 'lucide-react';
+import { TracesAreaChart } from '@/components/tremor';
+import type { TraceDataPoint } from '@/components/tremor';
+
+const CHART_DATA: TraceDataPoint[] = [
+  { date: 'May 04', traces: 320, errors: 12 },
+  { date: 'May 05', traces: 480, errors: 8 },
+  { date: 'May 06', traces: 410, errors: 15 },
+  { date: 'May 07', traces: 650, errors: 4 },
+  { date: 'May 08', traces: 720, errors: 6 },
+  { date: 'May 09', traces: 540, errors: 9 },
+];
 
 export default function DashboardPage() {
   return (
@@ -58,6 +69,11 @@ export default function DashboardPage() {
             icon={<AlertCircle className="h-5 w-5" />}
             trend="down"
           />
+        </div>
+
+        {/* Tremor area chart */}
+        <div className="mb-6">
+          <TracesAreaChart data={CHART_DATA} title="Trace volume — last 6 days" />
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
