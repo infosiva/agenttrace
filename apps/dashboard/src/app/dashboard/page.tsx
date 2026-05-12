@@ -1,4 +1,4 @@
-import { Activity, Clock, DollarSign, TrendingUp, AlertCircle } from 'lucide-react';
+import { Activity, Clock, DollarSign, TrendingUp, TrendingDown, AlertCircle } from 'lucide-react';
 import { TracesAreaChart } from '@/components/tremor';
 import type { TraceDataPoint } from '@/components/tremor';
 
@@ -77,7 +77,10 @@ export default function DashboardPage() {
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-          <h2 className="text-lg font-semibold mb-4">Recent Traces</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold">Recent Traces</h2>
+            <span className="text-xs text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">Demo data</span>
+          </div>
           <div className="space-y-3">
             <TraceRow
               name="user-query-agent"
@@ -103,6 +106,24 @@ export default function DashboardPage() {
               status="error"
               timestamp="8 minutes ago"
             />
+          </div>
+          {/* Empty state / connect CTA */}
+          <div className="mt-6 border-t border-gray-100 dark:border-gray-700 pt-5">
+            <div className="rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-600 p-6 text-center">
+              <Activity className="h-8 w-8 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">No live traces yet</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mb-4 max-w-xs mx-auto">
+                Connect your agent to start seeing real trace data here. Takes 60 seconds.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                <a href="/docs" className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                  View quickstart guide →
+                </a>
+                <button className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 rounded-lg hover:border-gray-300 transition">
+                  Browse integrations
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -153,7 +174,7 @@ function MetricCard({
             : 'text-red-600 dark:text-red-400'
         }`}
       >
-        <TrendingUp className="h-4 w-4" />
+        {isPositive ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
         {change} from last week
       </div>
     </div>
@@ -176,32 +197,32 @@ function TraceRow({
   timestamp: string;
 }) {
   return (
-    <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition cursor-pointer">
-      <div className="flex items-center gap-4">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition cursor-pointer gap-3 sm:gap-0">
+      <div className="flex items-center gap-3">
         <div
-          className={`h-2 w-2 rounded-full ${
+          className={`h-2 w-2 rounded-full shrink-0 ${
             status === 'success' ? 'bg-green-500' : 'bg-red-500'
           }`}
         />
-        <div>
-          <div className="font-medium text-gray-900 dark:text-white">{name}</div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">
-            {timestamp}
+        <div className="min-w-0">
+          <div className="font-medium text-gray-900 dark:text-white truncate">{name}</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400">
+            {timestamp} · {status === 'error' ? <span className="text-red-500">error</span> : <span className="text-green-600 dark:text-green-400">success</span>}
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-6 text-sm">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm pl-5 sm:pl-0">
         <div>
           <span className="text-gray-500 dark:text-gray-400">Duration: </span>
-          <span className="text-gray-900 dark:text-white">{duration}</span>
+          <span className="text-gray-900 dark:text-white font-medium">{duration}</span>
         </div>
         <div>
           <span className="text-gray-500 dark:text-gray-400">Tokens: </span>
-          <span className="text-gray-900 dark:text-white">{tokens}</span>
+          <span className="text-gray-900 dark:text-white font-medium">{tokens}</span>
         </div>
         <div>
           <span className="text-gray-500 dark:text-gray-400">Cost: </span>
-          <span className="text-gray-900 dark:text-white">{cost}</span>
+          <span className="text-gray-900 dark:text-white font-medium">{cost}</span>
         </div>
       </div>
     </div>
