@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Activity, BarChart3, Clock, DollarSign, Check, Zap, Shield, Code2, TrendingUp, Terminal, AlertCircle, Radio, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import AnimatedHeroGuide from '@/components/AnimatedHeroGuide';
 
 const LOG_LINES = [
   { time: '14:32:01.423', level: 'INFO', agent: 'research-agent', msg: 'Starting task: "Summarize latest AI papers"', color: 'text-green-400' },
@@ -172,6 +173,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#050a05] text-gray-100">
+      <AnimatedHeroGuide />
       {/* Pro upgrade success banner */}
       {showProBanner && (
         <div className="pro-banner fixed top-0 inset-x-0 z-[100] flex items-center justify-center gap-3 bg-green-500 text-black font-mono text-sm font-bold py-3 px-4">
