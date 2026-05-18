@@ -1,7 +1,9 @@
+import Script from 'next/script'
 import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/providers';
+import ChatBot from '@/components/ChatBot';
 import Link from 'next/link';
 import { Activity, Globe } from 'lucide-react';
 
@@ -55,7 +57,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             ))}
           </nav>
           {children}
+          <ChatBot />
         </Providers>
+        {/* eslint-disable-next-line @next/next/no-before-interactive-script-outside-document */}
+        <script src="http://31.97.56.148:3098/t.js" data-site="agentlogs.app" defer></script>
+            <Script async src="http://31.97.56.148:3100/script.js" data-website-id="56dc060a-d35d-4de6-b925-c9dba0ec3542" strategy="afterInteractive" />
       </body>
     </html>
   );
