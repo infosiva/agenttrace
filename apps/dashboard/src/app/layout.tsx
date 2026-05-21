@@ -4,21 +4,56 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/providers';
 import ChatBot from '@/components/ChatBot';
-import Link from 'next/link';
-import { Activity, Globe } from 'lucide-react';
+import AppNav from '@/components/AppNav';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-body' });
 const jetbrains = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono', weight: ['400', '500'] });
 
 export const metadata: Metadata = {
-  title: 'AgentTrace — AI Agent Observability',
-  description: 'Trace, debug, and monitor AI agents in production',
+  metadataBase: new URL('https://agentlogs.app'),
+  title: 'AgentTrace — AI Agent Observability & Monitoring Platform',
+  description: 'Trace, debug, and monitor AI agents in production. Complete observability for LLM calls, tool use, errors, and costs. Real-time agent monitoring platform.',
+  keywords: ['AI agent monitoring', 'LLM observability', 'agent debugging', 'AI tracing', 'agent logs'],
+  authors: [{ name: 'AgentTrace' }],
+  openGraph: {
+    title: 'AgentTrace — Monitor Your AI Agents',
+    description: 'Complete observability for production AI agents. Debug LLM calls, optimize costs, track errors.',
+    url: 'https://agentlogs.app',
+    siteName: 'AgentTrace',
+    type: 'website',
+    images: [{
+      url: 'https://agentlogs.app/og-image.png',
+      width: 1200,
+      height: 630,
+      alt: 'AgentTrace - AI Agent Monitoring Platform'
+    }]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AgentTrace — Monitor Your AI Agents',
+    description: 'Complete observability for production AI agents'
+  },
+  robots: 'index, follow'
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "AgentTrace",
+          "description": "AI Agent Observability Platform",
+          "url": "https://agentlogs.app",
+          "applicationCategory": "DeveloperApplication",
+          "operatingSystem": "Cloud",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          }
+        }) }} />
         <style dangerouslySetInnerHTML={{ __html: `
           :root {
             --bg: #020617;
@@ -39,23 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${inter.variable} ${jetbrains.variable}`} style={{ background: '#020617', color: '#f8fafc' }}>
         <Providers>
-          <nav style={{ background: 'rgba(2,6,23,0.97)', borderBottom: '1px solid rgba(51,65,85,0.5)', padding: '0 24px', height: 56, display: 'flex', alignItems: 'center', gap: 24, position: 'sticky', top: 0, zIndex: 50, backdropFilter: 'blur(12px)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginRight: 8 }}>
-              <Activity style={{ width: 16, height: 16, color: '#22c55e' }} />
-              <span style={{ fontWeight: 700, color: '#f8fafc', fontSize: 14, letterSpacing: '-0.02em' }}>AgentTrace</span>
-              <span style={{ fontSize: 10, background: 'rgba(34,197,94,0.1)', color: '#4ade80', padding: '1px 6px', borderRadius: 99, fontWeight: 600, border: '1px solid rgba(34,197,94,0.2)' }}>BETA</span>
-            </div>
-            {[
-              { href: '/dashboard', label: 'Dashboard' },
-              { href: '/traces', label: 'Traces' },
-              { href: '/sites', label: 'Monitor' },
-            ].map(({ href, label }) => (
-              <Link key={href} href={href} style={{ fontSize: 13, color: 'rgba(148,163,184,0.8)', textDecoration: 'none', transition: 'color 150ms' }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#f8fafc')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(148,163,184,0.8)')}
-              >{label}</Link>
-            ))}
-          </nav>
+          <AppNav />
           {children}
           <ChatBot />
         </Providers>

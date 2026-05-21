@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import type { SiteConfig } from '@/lib/sites-registry';
 import type { SiteHealth } from '@/lib/tracker-client';
