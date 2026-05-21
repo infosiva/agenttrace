@@ -314,8 +314,8 @@ with client.trace("agent-run") as trace:
                   <span className="font-mono text-xs text-green-700">{step}</span>
                   <span className="font-mono text-xs text-green-500">{label}</span>
                 </div>
-                <pre className="p-4 bg-black/90 overflow-x-auto">
-                  <code className="font-mono text-xs text-green-400">{code}</code>
+                <pre className="p-4 bg-black/90 overflow-x-auto max-w-full">
+                  <code className="font-mono text-xs text-green-400 whitespace-pre">{code}</code>
                 </pre>
               </div>
             ))}
@@ -388,8 +388,8 @@ with client.trace("agent-run") as trace:
             <div className="font-mono text-xs text-green-600 uppercase tracking-widest mb-3">// compare</div>
             <h2 className="font-mono font-bold text-3xl text-white">How we stack up</h2>
           </div>
-          <div className="max-w-3xl mx-auto border border-green-900/50 rounded-lg overflow-hidden bg-black/60">
-            <table className="w-full font-mono text-sm">
+          <div className="max-w-3xl mx-auto border border-green-900/50 rounded-lg overflow-x-auto bg-black/60">
+            <table className="w-full font-mono text-sm min-w-[480px]">
               <thead>
                 <tr className="border-b border-green-900/50 bg-gray-900/60">
                   <th className="px-4 py-3 text-left text-green-600 text-xs uppercase tracking-wider">Feature</th>
