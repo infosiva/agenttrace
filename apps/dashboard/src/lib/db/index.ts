@@ -2,7 +2,12 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schema';
 
-const connectionString = process.env.DATABASE_URL;
+// Accept either the standard DATABASE_URL or Vercel's namespaced agentlogs_DATABASE_URL
+const connectionString =
+  process.env.DATABASE_URL ||
+  process.env.agentlogs_DATABASE_URL ||
+  process.env.POSTGRES_URL ||
+  process.env.agentlogs_POSTGRES_URL;
 
 if (!connectionString) {
   throw new Error('DATABASE_URL is not set');
