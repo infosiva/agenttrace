@@ -25,7 +25,7 @@ export function SiteHeader() {
               href="/traces"
               className="transition-colors hover:text-foreground/80 text-foreground/60"
             >
-              Features
+              Traces
             </Link>
             <Link
               href="/integrations"
@@ -87,7 +87,7 @@ export function SiteHeader() {
               className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-accent"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Features
+              Traces
             </Link>
             <Link
               href="/integrations"

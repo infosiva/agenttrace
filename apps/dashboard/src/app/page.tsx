@@ -221,9 +221,9 @@ export default function HomePage() {
           <div className="flex justify-center mb-8">
             <span className="inline-flex items-center gap-2 font-mono text-xs border border-green-900/70 bg-green-950/30 text-green-500 px-3 py-1.5 rounded-full">
               <Radio className="w-3 h-3 animate-pulse" />
-              Trusted by 500+ AI developers
-              <span className="text-green-700">·</span>
               Open Source
+              <span className="text-green-700">·</span>
+              Self-Hostable
             </span>
           </div>
 
@@ -278,7 +278,7 @@ export default function HomePage() {
               { icon: Zap, title: 'Multi-Framework', desc: 'LangChain, CrewAI, AutoGPT, or your own custom agents' },
               { icon: Shield, title: 'Self-Hostable', desc: 'Your data never leaves your infra. Docker in 2 minutes' },
               { icon: Code2, title: 'SDK First', desc: 'Python + TypeScript. 3 lines to full instrumentation' },
-              { icon: TrendingUp, title: 'Production Scale', desc: 'Handles 10k events/sec. Designed for enterprise workloads' },
+              { icon: TrendingUp, title: 'Production Scale', desc: 'Built on FastAPI + Postgres. Async event ingestion designed to scale' },
             ].map(({ icon: Icon, title, desc }, i) => (
               <div key={i} className="group border border-green-900/50 bg-black/60 rounded-lg p-5 hover:border-green-700/70 hover:bg-green-950/20 transition-all">
                 <div className="w-8 h-8 rounded bg-green-950 border border-green-800 flex items-center justify-center mb-3 group-hover:border-green-600 transition-colors">
@@ -435,7 +435,7 @@ with client.trace("agent-run") as trace:
               Ship AI agents with confidence
             </h2>
             <p className="font-mono text-green-600 max-w-xl mx-auto mb-8">
-              Join 500+ AI developers who already use AgentTrace to monitor, debug, and optimize their agents in production.
+              Open-source observability for AI agents. Free forever for the core. Self-host or use our hosted version.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/dashboard" className="font-mono text-sm bg-green-500 hover:bg-green-400 text-black font-bold px-8 py-3 rounded transition-colors">
