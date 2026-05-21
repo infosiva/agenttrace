@@ -1,389 +1,231 @@
-'use client';
-
-import { Book, Code, Rocket, Server, Package, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { SiteHeader } from '@/components/site-header';
-import { SiteFooter } from '@/components/site-footer';
+import { Terminal, Key, FileCode2, Webhook, Box } from 'lucide-react';
 
-const quickLinks = [
-  {
-    title: 'Getting Started',
-    description: 'Install AgentTrace and instrument your first agent',
-    icon: <Rocket className="h-6 w-6" />,
-    href: '#getting-started',
-    color: 'blue',
-  },
-  {
-    title: 'Python SDK',
-    description: 'Comprehensive guide to the Python SDK',
-    icon: <Code className="h-6 w-6" />,
-    href: '#python-sdk',
-    color: 'green',
-  },
-  {
-    title: 'TypeScript SDK',
-    description: 'Use AgentTrace with TypeScript and JavaScript',
-    icon: <Package className="h-6 w-6" />,
-    href: '#typescript-sdk',
-    color: 'purple',
-  },
-  {
-    title: 'API Reference',
-    description: 'Complete REST API documentation',
-    icon: <Server className="h-6 w-6" />,
-    href: '#api-reference',
-    color: 'orange',
-  },
-];
+export const metadata = {
+  title: 'AgentLogs Docs — Trace AI agents in 3 lines',
+  description: 'Install the SDK, send your first trace, view it in the dashboard.',
+};
 
-const integrations = [
-  { name: 'LangChain', logo: '🦜', status: 'Planned' },
-  { name: 'CrewAI', logo: '🚢', status: 'Planned' },
-  { name: 'AutoGPT', logo: '🤖', status: 'Planned' },
-  { name: 'LlamaIndex', logo: '🦙', status: 'Planned' },
-];
+const QUICKSTART_PY = `from agentlogs import AgentLogs, StepType
+
+client = AgentLogs(api_key="al_...")  # or set AGENTLOGS_API_KEY env var
+
+async with await client.create_trace(name="research-agent") as trace:
+    await trace.add_step(
+        name="openai_call",
+        step_type=StepType.LLM,
+        metadata={"model": "gpt-4o", "provider": "openai"},
+        tokens=1234,
+        cost=0.012,
+    )`;
+
+const INSTALL_PY = `pip install agentlogs-sdk`;
+
+const ENV_SETUP = `export AGENTLOGS_API_KEY="al_..."
+export AGENTLOGS_PROJECT="my-agent"`;
+
+const DECORATOR = `from agentlogs import trace_agent
+
+@trace_agent()
+async def my_agent(query: str):
+    return await llm.generate(query)`;
+
+const STEP_TYPES = `from agentlogs import StepType
+
+StepType.LLM        # OpenAI / Anthropic / etc. calls
+StepType.TOOL       # External tool / function call
+StepType.FUNCTION   # Internal function step
+StepType.OTHER      # Anything else`;
+
+const CURL_TRACE = `curl -X POST https://agentlogs.app/api/v1/traces \\
+  -H "Authorization: Bearer $AGENTLOGS_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"name": "my-agent-run", "metadata": {"version": "1.0"}}'`;
 
 export default function DocsPage() {
   return (
-    <div className="flex min-h-screen flex-col">
-      <SiteHeader />
-
-      <main className="flex-1 container py-12">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-4">
-            <Book className="h-8 w-8 text-blue-600" />
-          </div>
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Documentation
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Everything you need to instrument, monitor, and debug your AI agents
+    <main className="min-h-screen bg-[#020617] text-slate-100 font-mono">
+      <div className="container mx-auto max-w-4xl px-4 py-12">
+        <header className="mb-10">
+          <p className="text-xs text-green-600 uppercase tracking-widest mb-2">// docs</p>
+          <h1 className="text-4xl font-bold text-white mb-3">Get started in 60 seconds</h1>
+          <p className="text-slate-400">
+            Install the SDK, drop your API key, send a trace. View it in the dashboard.
           </p>
-        </div>
+        </header>
 
-        <div className="grid md:grid-cols-2 gap-6 mb-16">
-          {quickLinks.map((link) => (
-            <Link key={link.title} href={link.href as never}>
-              <Card className="h-full hover:shadow-lg transition group">
-                <CardHeader>
-                  <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    {link.icon}
-                  </div>
-                  <CardTitle className="group-hover:text-primary transition">{link.title}</CardTitle>
-                  <CardDescription>{link.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <span className="text-primary text-sm font-medium inline-flex items-center gap-1">
-                    Read more
-                    <ArrowRight className="h-4 w-4" />
-                  </span>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        <nav className="grid sm:grid-cols-2 gap-3 mb-12">
+          <DocCard href="#install" icon={Box} title="1. Install" desc="pip install agentlogs-sdk" />
+          <DocCard href="#api-key" icon={Key} title="2. Get an API key" desc="Sign in and create a project" />
+          <DocCard href="#first-trace" icon={FileCode2} title="3. Send first trace" desc="3 lines of Python" />
+          <DocCard href="#api-reference" icon={Webhook} title="REST API" desc="Use any language via HTTP" />
+        </nav>
 
-        <section id="getting-started" className="mb-16 scroll-mt-20">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-3xl">Getting Started</CardTitle>
-            </CardHeader>
-            <CardContent>
+        <Section id="install" title="1. Install the SDK">
+          <p className="text-sm text-slate-400 mb-3">Python 3.9 or later.</p>
+          <CodeBlock code={INSTALL_PY} language="bash" />
+        </Section>
 
-            <div className="prose dark:prose-invert max-w-none">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                1. Install the SDK
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
-                Choose your preferred language and install the SDK:
-              </p>
+        <Section id="api-key" title="2. Get your API key">
+          <ol className="text-sm text-slate-300 space-y-2 mb-4">
+            <li>1. <Link href="/login" className="text-green-400 hover:text-green-300 underline">Sign in</Link> with email (magic link).</li>
+            <li>2. Go to <Link href="/settings" className="text-green-400 hover:text-green-300 underline">Settings → Projects</Link>.</li>
+            <li>3. Create a project + an API key. Copy the key (you&apos;ll only see it once).</li>
+          </ol>
+          <p className="text-sm text-slate-400 mb-3">Then set it in your environment:</p>
+          <CodeBlock code={ENV_SETUP} language="bash" />
+        </Section>
 
-              <div className="mb-8">
-                <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Python
-                </p>
-                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                  <code>pip install agenttrace-sdk</code>
-                </pre>
-              </div>
+        <Section id="first-trace" title="3. Send your first trace">
+          <CodeBlock code={QUICKSTART_PY} language="python" />
+          <p className="text-sm text-slate-400 mt-4">
+            Open the <Link href="/dashboard" className="text-green-400 hover:text-green-300 underline">dashboard</Link> — your trace appears within seconds.
+          </p>
+        </Section>
 
-              <div className="mb-8">
-                <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  TypeScript/JavaScript
-                </p>
-                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                  <code># Not yet published - install from source
-npm install github:agenttrace/agenttrace#packages/sdk-typescript</code>
-                </pre>
-              </div>
+        <Section id="decorator" title="Decorator API (alternative)">
+          <p className="text-sm text-slate-400 mb-3">Auto-trace an async function:</p>
+          <CodeBlock code={DECORATOR} language="python" />
+        </Section>
 
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                2. Set Your API Key
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
-                Get your API key from the dashboard and set it as an environment variable:
-              </p>
-              <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-8">
-                <code>{`export AGENTTRACE_API_KEY="your-api-key-here"`}</code>
-              </pre>
+        <Section id="step-types" title="Step types">
+          <CodeBlock code={STEP_TYPES} language="python" />
+        </Section>
 
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                3. Instrument Your Agent
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
-                Add tracing to your agent with a simple decorator:
-              </p>
-              <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                <code>{`from agenttrace import trace_agent
+        <Section id="api-reference" title="REST API reference">
+          <p className="text-sm text-slate-400 mb-3">
+            All SDK calls go through these HTTP endpoints. Use directly from any language.
+          </p>
 
-@trace_agent(project="my-agent")
-async def my_agent(query: str):
-    # Your agent logic here
-    response = await llm.generate(query)
-    return response`}</code>
-              </pre>
-            </div>
-            </CardContent>
-          </Card>
-        </section>
+          <EndpointBlock
+            method="POST"
+            path="/api/v1/traces"
+            desc="Create a new trace. Returns trace id."
+            body={`{
+  "name": "agent-name",
+  "input_data": { ... },     // optional
+  "metadata": { ... },       // optional
+  "tags": ["a", "b"]         // optional
+}`}
+          />
 
-        <section id="python-sdk" className="mb-16 scroll-mt-20">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-3xl">Python SDK</CardTitle>
-            </CardHeader>
-            <CardContent>
+          <EndpointBlock
+            method="POST"
+            path="/api/v1/traces/:id/steps"
+            desc="Append a step to a trace."
+            body={`{
+  "name": "step-name",
+  "type": "llm|tool|function|other",
+  "status": "success|error",
+  "input": { ... },
+  "output": { ... },
+  "metadata": { ... },
+  "tokens": 1234,
+  "cost": 0.012,
+  "duration_ms": 450
+}`}
+          />
 
-            <div className="prose dark:prose-invert max-w-none">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                Basic Usage
-              </h3>
-              <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-6">
-                <code>{`from agenttrace import AgentTrace
+          <EndpointBlock
+            method="PATCH"
+            path="/api/v1/traces/:id"
+            desc="Finalize a trace."
+            body={`{
+  "status": "success|error",
+  "output_data": { ... },
+  "error_message": "...",
+  "total_tokens": 5000,
+  "total_cost": 0.045
+}`}
+          />
 
-# Initialize the client
-client = AgentTrace(
-    api_key="your-api-key",
-    project="my-agent"
-)
+          <p className="text-sm text-slate-400 mt-6 mb-3">Authorize each request with your API key:</p>
+          <CodeBlock code={CURL_TRACE} language="bash" />
+        </Section>
 
-# Create a trace
-with client.trace("user-query") as trace:
-    # Add steps
-    trace.step("thinking", metadata={"input": "Hello"})
+        <Section id="self-host" title="Self-hosting">
+          <p className="text-sm text-slate-400 mb-3">
+            Point the SDK at your own deployment by overriding the API URL:
+          </p>
+          <CodeBlock
+            code={`from agentlogs import configure\n\nconfigure(api_url="https://logs.your-company.com")`}
+            language="python"
+          />
+          <p className="text-sm text-slate-400 mt-4">
+            Source code:{' '}
+            <a href="https://github.com/infosiva/agenttrace" className="text-green-400 hover:text-green-300 underline" target="_blank" rel="noopener noreferrer">
+              github.com/infosiva/agenttrace
+            </a>
+          </p>
+        </Section>
 
-    # Add LLM calls
-    trace.llm_call(
-        model="gpt-4",
-        prompt="Hello",
-        response="Hi there!",
-        tokens=15,
-        cost=0.002
-    )
+        <footer className="mt-12 pt-8 border-t border-slate-800 text-center">
+          <p className="text-sm text-slate-400 mb-3">Stuck? Open an issue or DM.</p>
+          <a
+            href="https://github.com/infosiva/agenttrace/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm text-green-400 hover:text-green-300 underline"
+          >
+            <Terminal className="w-4 h-4" /> GitHub issues
+          </a>
+        </footer>
+      </div>
+    </main>
+  );
+}
 
-    trace.step("responding", metadata={"output": "Hi there!"})`}</code>
-              </pre>
+function DocCard({ href, icon: Icon, title, desc }: { href: string; icon: typeof Terminal; title: string; desc: string }) {
+  return (
+    <a
+      href={href}
+      className="block border border-slate-800 bg-slate-950/60 rounded-lg p-4 hover:border-green-500/40 hover:bg-green-500/5 transition"
+    >
+      <div className="flex items-center gap-3 mb-2">
+        <Icon className="w-5 h-5 text-green-400" />
+        <h3 className="font-bold text-sm text-white">{title}</h3>
+      </div>
+      <p className="text-xs text-slate-400">{desc}</p>
+    </a>
+  );
+}
 
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                Advanced Features
-              </h3>
-              <ul className="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-2 mb-6">
-                <li>Automatic token counting</li>
-                <li>Cost calculation for major LLM providers</li>
-                <li>Async support</li>
-                <li>Error tracking and stack traces</li>
-                <li>Custom metadata and tags</li>
-              </ul>
+function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
+  return (
+    <section id={id} className="mb-12 scroll-mt-8">
+      <h2 className="text-xl font-bold text-white mb-4">{title}</h2>
+      {children}
+    </section>
+  );
+}
 
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                Configuration
-              </h3>
-              <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                <code>{`client = AgentTrace(
-    api_key="your-api-key",
-    project="my-agent",
-    api_url="https://api.agenttrace.io",  # Optional: custom API URL
-    enable_local_logging=True,             # Optional: log locally
-    batch_size=10,                         # Optional: batch size
-    flush_interval=5                       # Optional: flush interval (seconds)
-)`}</code>
-              </pre>
-            </div>
-            </CardContent>
-          </Card>
-        </section>
+function CodeBlock({ code, language }: { code: string; language: string }) {
+  return (
+    <div className="border border-slate-800 rounded-lg bg-black/80 overflow-hidden">
+      <div className="flex items-center gap-2 px-4 py-2 bg-slate-900/80 border-b border-slate-800">
+        <span className="text-xs text-slate-500 uppercase tracking-widest">{language}</span>
+      </div>
+      <pre className="p-4 overflow-x-auto max-w-full">
+        <code className="text-xs text-green-300 whitespace-pre">{code}</code>
+      </pre>
+    </div>
+  );
+}
 
-        <section id="typescript-sdk" className="mb-16 scroll-mt-20">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-3xl">TypeScript SDK</CardTitle>
-            </CardHeader>
-            <CardContent>
-
-            <div className="prose dark:prose-invert max-w-none">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                Basic Usage
-              </h3>
-              <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-6">
-                <code>{`import { AgentTrace } from '@agenttrace/sdk';
-
-// Initialize the client
-const client = new AgentTrace({
-  apiKey: 'your-api-key',
-  project: 'my-agent'
-});
-
-// Create a trace
-const trace = await client.startTrace('user-query');
-
-// Add steps
-await trace.addStep('thinking', { input: 'Hello' });
-
-// Add LLM calls
-await trace.addLLMCall({
-  model: 'gpt-4',
-  prompt: 'Hello',
-  response: 'Hi there!',
-  tokens: 15,
-  cost: 0.002
-});
-
-// End the trace
-await trace.end();`}</code>
-              </pre>
-
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                Using Decorators
-              </h3>
-              <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                <code>{`import { traceAgent } from '@agenttrace/sdk';
-
-class MyAgent {
-  @traceAgent({ project: 'my-agent' })
-  async processQuery(query: string) {
-    // Your agent logic here
-    return response;
-  }
-}`}</code>
-              </pre>
-            </div>
-            </CardContent>
-          </Card>
-        </section>
-
-        <section id="api-reference" className="mb-16 scroll-mt-20">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-3xl">API Reference</CardTitle>
-            </CardHeader>
-            <CardContent>
-
-            <div className="prose dark:prose-invert max-w-none">
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
-                AgentTrace provides a RESTful API for all operations. Base URL: <code className="text-blue-600">https://api.agenttrace.io</code>
-              </p>
-
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                Authentication
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
-                All API requests require an API key in the Authorization header:
-              </p>
-              <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-8">
-                <code>{`curl -H "Authorization: Bearer YOUR_API_KEY" \\
-  https://api.agenttrace.io/v1/traces`}</code>
-              </pre>
-
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                Endpoints
-              </h3>
-
-              <div className="space-y-6">
-                <div className="border-l-4 border-blue-600 pl-4">
-                  <p className="font-mono text-sm text-blue-600 mb-2">POST /v1/traces</p>
-                  <p className="text-gray-600 dark:text-gray-400">Create a new trace</p>
-                </div>
-
-                <div className="border-l-4 border-green-600 pl-4">
-                  <p className="font-mono text-sm text-green-600 mb-2">GET /v1/traces</p>
-                  <p className="text-gray-600 dark:text-gray-400">List all traces for a project</p>
-                </div>
-
-                <div className="border-l-4 border-purple-600 pl-4">
-                  <p className="font-mono text-sm text-purple-600 mb-2">GET /v1/traces/:id</p>
-                  <p className="text-gray-600 dark:text-gray-400">Get a specific trace by ID</p>
-                </div>
-
-                <div className="border-l-4 border-orange-600 pl-4">
-                  <p className="font-mono text-sm text-orange-600 mb-2">POST /v1/traces/:id/steps</p>
-                  <p className="text-gray-600 dark:text-gray-400">Add a step to an existing trace</p>
-                </div>
-              </div>
-            </div>
-            </CardContent>
-          </Card>
-        </section>
-
-        <section className="mb-16">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-3xl">Integrations</CardTitle>
-              <CardDescription>
-                AgentTrace integrates seamlessly with popular AI frameworks
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-2 gap-4">
-                {integrations.map((integration) => (
-                  <div
-                    key={integration.name}
-                    className="flex items-center justify-between p-4 bg-muted rounded-lg"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{integration.logo}</span>
-                      <span className="font-semibold">
-                        {integration.name}
-                      </span>
-                    </div>
-                    <Badge variant={integration.status === 'Available' ? 'default' : 'secondary'}>
-                      {integration.status}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-
-        <Card className="bg-primary/5 border-primary/20">
-          <CardHeader>
-            <CardTitle>Need Help?</CardTitle>
-            <CardDescription>
-              Join our community or reach out to our support team
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex gap-4">
-              <Link
-                href="https://github.com"
-                className="text-sm font-medium text-primary hover:underline"
-              >
-                GitHub Discussions
-              </Link>
-              <Link
-                href="/dashboard"
-                className="text-sm font-medium text-primary hover:underline"
-              >
-                Contact Support
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-      </main>
-
-      <SiteFooter />
+function EndpointBlock({ method, path, desc, body }: { method: string; path: string; desc: string; body: string }) {
+  const methodColor = method === 'POST' ? 'text-green-400 bg-green-500/10 border-green-500/30' :
+                       method === 'PATCH' ? 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30' :
+                       'text-slate-300 bg-slate-700/30 border-slate-700';
+  return (
+    <div className="mb-6 border border-slate-800 rounded-lg bg-slate-950/60 overflow-hidden">
+      <div className="flex items-center gap-2 px-4 py-2 bg-black/40 border-b border-slate-800">
+        <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${methodColor}`}>{method}</span>
+        <code className="text-sm text-slate-200">{path}</code>
+      </div>
+      <p className="text-xs text-slate-400 px-4 pt-3">{desc}</p>
+      <pre className="p-4 overflow-x-auto max-w-full">
+        <code className="text-xs text-green-300 whitespace-pre">{body}</code>
+      </pre>
     </div>
   );
 }

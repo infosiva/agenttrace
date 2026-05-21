@@ -1,14 +1,14 @@
-"""Main AgentTrace client"""
+"""Main AgentLogs client"""
 
 import httpx
 from typing import Optional, Dict, Any, List
 from .config import Config, get_config
 from .trace import Trace
-from .models import TraceData, CreateTraceRequest
+from .models import CreateTraceRequest
 
 
-class AgentTrace:
-    """Main AgentTrace client for sending traces"""
+class AgentLogs:
+    """Main AgentLogs client for sending traces"""
 
     def __init__(
         self,
@@ -17,11 +17,11 @@ class AgentTrace:
         project: Optional[str] = None,
         config: Optional[Config] = None,
     ):
-        """Initialize AgentTrace client
+        """Initialize AgentLogs client
 
         Args:
-            api_key: Your AgentTrace API key (defaults to AGENTTRACE_API_KEY env var)
-            api_url: AgentTrace API URL (defaults to https://api.agenttrace.io)
+            api_key: Your AgentLogs API key (defaults to AGENTTRACE_API_KEY env var)
+            api_url: AgentLogs API URL (defaults to https://api.agentlogs.io)
             project: Default project name
             config: Custom config object (overrides other parameters)
         """
@@ -67,10 +67,11 @@ class AgentTrace:
         if not self.config.enabled:
             return Trace(client=self, trace_id="disabled", name=name, project="disabled")
 
+        # Project is resolved server-side via API key — argument kept for
+        # back-compat but no longer transmitted.
         project = project or self.config.project or "default"
 
         request = CreateTraceRequest(
-            project=project,
             name=name,
             input_data=input_data,
             metadata=metadata,
@@ -79,7 +80,7 @@ class AgentTrace:
 
         try:
             response = await self.client.post(
-                "/v1/traces",
+                "/api/v1/traces",
                 json=request.model_dump(exclude_none=True),
             )
             response.raise_for_status()
@@ -92,7 +93,7 @@ class AgentTrace:
                 project=project,
             )
         except Exception as e:
-            print(f"AgentTrace error: Failed to create trace: {e}")
+            print(f"AgentLogs error: Failed to create trace: {e}")
             # Return a no-op trace to not break user's code
             return Trace(client=self, trace_id="error", name=name, project=project)
 

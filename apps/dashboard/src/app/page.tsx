@@ -116,18 +116,18 @@ function MetricsPanel() {
 }
 
 const PRO_FEATURES = [
-  'Unlimited log retention (30 days)',
-  'Alerting & PagerDuty integration',
-  'Team access (up to 10 seats)',
-  'REST API + webhook exports',
-  'Priority support (4h SLA)',
-  'SSO / SAML authentication',
+  '1,000,000 trace events / month',
+  '30-day log retention',
+  'Unlimited projects',
+  'Team seats (up to 5)',
+  'Webhook + REST API export',
+  'Email support (24h SLA)',
 ];
 
 const FREE_FEATURES = [
+  '10,000 trace events / month',
   '7-day log retention',
-  '3 agents max',
-  '10k events/month',
+  '1 project',
   'Community support',
 ];
 
@@ -355,7 +355,7 @@ with client.trace("agent-run") as trace:
                 POPULAR
               </div>
               <div className="font-mono text-xs text-green-400 uppercase tracking-widest mb-2">Pro</div>
-              <div className="font-mono text-4xl font-bold text-white mb-1">$15</div>
+              <div className="font-mono text-4xl font-bold text-white mb-1">$19</div>
               <div className="font-mono text-xs text-green-600 mb-6">per month, billed monthly</div>
               <ul className="space-y-3 mb-8">
                 {PRO_FEATURES.map(f => (
@@ -375,7 +375,7 @@ with client.trace("agent-run") as trace:
                   disabled={loading}
                   className="w-full font-mono text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-black font-bold px-4 py-2.5 rounded transition-colors"
                 >
-                  {loading ? 'Redirecting...' : 'Upgrade to Pro — $15/mo'}
+                  {loading ? 'Redirecting...' : 'Upgrade to Pro — $19/mo'}
                 </button>
               )}
             </div>
@@ -445,7 +445,7 @@ with client.trace("agent-run") as trace:
                 onClick={handleUpgrade}
                 className="font-mono text-sm border border-green-600/50 text-green-500 hover:border-green-500 hover:text-green-400 px-8 py-3 rounded transition-colors"
               >
-                Go Pro — $15/mo
+                Go Pro — $19/mo
               </button>
             </div>
           </div>

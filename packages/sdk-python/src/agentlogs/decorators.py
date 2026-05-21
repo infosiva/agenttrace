@@ -2,7 +2,7 @@
 
 import functools
 from typing import Optional, Dict, Any, Callable, TypeVar, ParamSpec
-from .client import AgentTrace
+from .client import AgentLogs
 from .models import TraceStatus
 
 P = ParamSpec("P")
@@ -13,7 +13,7 @@ def trace_agent(
     project: Optional[str] = None,
     name: Optional[str] = None,
     metadata: Optional[Dict[str, Any]] = None,
-    client: Optional[AgentTrace] = None,
+    client: Optional[AgentLogs] = None,
 ) -> Callable[[Callable[P, R]], Callable[P, R]]:
     """Decorator to automatically trace an agent function
 
@@ -26,7 +26,7 @@ def trace_agent(
         project: Project name (defaults to configured project)
         name: Agent name (defaults to function name)
         metadata: Additional metadata to attach to trace
-        client: Custom AgentTrace client (creates default if not provided)
+        client: Custom AgentLogs client (creates default if not provided)
     """
 
     def decorator(func: Callable[P, R]) -> Callable[P, R]:
@@ -36,7 +36,7 @@ def trace_agent(
         async def async_wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
             nonlocal client
             if client is None:
-                client = AgentTrace()
+                client = AgentLogs()
 
             # Prepare input data
             input_data = {
@@ -67,7 +67,7 @@ def trace_agent(
                 # Complete trace with error
                 await trace.complete(
                     status=TraceStatus.ERROR,
-                    error=str(e),
+                    error_message=str(e),
                 )
                 raise
 

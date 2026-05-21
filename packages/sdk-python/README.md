@@ -1,84 +1,76 @@
-# AgentTrace Python SDK
+# AgentLogs SDK (Python)
 
-Python SDK for tracing AI agents with AgentTrace.
-
-## Installation
+Open-source observability for AI agents. Trace every LLM call, tool use, error, and cost.
 
 ```bash
-pip install agenttrace-sdk
+pip install agentlogs-sdk
 ```
 
-## Quick Start
+## Quickstart
 
 ```python
-from agenttrace import AgentTrace, trace_agent
-import os
+import asyncio
+from agentlogs import AgentLogs, StepType
 
-# Initialize the client
-trace = AgentTrace(
-    api_key=os.getenv("AGENTTRACE_API_KEY"),
-    api_url=os.getenv("AGENTTRACE_API_URL", "https://api.agenttrace.io")
-)
+async def main():
+    # Reads AGENTLOGS_API_KEY from env, defaults to https://agentlogs.app
+    client = AgentLogs()
 
-# Option 1: Use decorator
-@trace_agent(project="my-agent")
-async def my_agent(query: str):
-    response = await llm.generate(query)
-    return response
+    async with await client.create_trace(name="research-agent") as trace:
+        async with trace.step("search", step_type=StepType.TOOL) as s:
+            # ... your tool call
+            pass
 
-# Option 2: Manual tracing
-async def manual_example():
-    with trace.start_trace(name="custom-agent") as t:
-        t.add_step("reasoning", {"thought": "analyzing query"})
-        result = await some_operation()
-        t.add_step("response", {"result": result})
-        return result
-```
+        await trace.add_step(
+            name="gpt-4o",
+            step_type=StepType.LLM,
+            metadata={"model": "gpt-4o", "provider": "openai"},
+            tokens=1234,
+            cost=0.012,
+        )
 
-## Features
-
-- Automatic tracing with decorators
-- Manual step-by-step tracing
-- Token and cost tracking
-- Error capturing
-- Integration with LangChain, OpenAI, Anthropic
-
-## Advanced Usage
-
-### LangChain Integration
-
-```python
-from agenttrace.integrations.langchain import TracedLangChain
-
-chain = TracedLangChain(llm_chain, project="my-langchain-app")
-result = await chain.run("What is AI?")
-```
-
-### Custom Metadata
-
-```python
-@trace_agent(project="my-agent", metadata={"version": "1.0", "env": "prod"})
-async def my_agent(query: str):
-    return await process(query)
+asyncio.run(main())
 ```
 
 ## Configuration
 
-Set environment variables:
-
-```bash
-export AGENTTRACE_API_KEY="your-api-key"
-export AGENTTRACE_API_URL="https://api.agenttrace.io"  # optional
-```
-
-Or configure in code:
-
 ```python
-from agenttrace import configure
+from agentlogs import configure
 
 configure(
-    api_key="your-api-key",
-    api_url="https://api.agenttrace.io",
-    project="default-project"
+    api_key="al_...",                  # or set AGENTLOGS_API_KEY
+    api_url="https://agentlogs.app",   # default
+    project="my-agent",
 )
 ```
+
+Env vars:
+- `AGENTLOGS_API_KEY` — get one from https://agentlogs.app/settings
+- `AGENTLOGS_API_URL` — override for self-hosted instances
+- `AGENTLOGS_PROJECT` — default project name
+
+## Decorator API
+
+```python
+from agentlogs import trace_agent
+
+@trace_agent()
+async def my_agent(query: str):
+    return await llm.generate(query)
+```
+
+## Self-hosting
+
+Point the SDK at your own deployment:
+
+```python
+configure(api_url="https://logs.your-company.com")
+```
+
+## Links
+
+- Website: https://agentlogs.app
+- Docs: https://agentlogs.app/docs
+- Source: https://github.com/infosiva/agenttrace
+
+MIT licensed.

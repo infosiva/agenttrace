@@ -1,386 +1,173 @@
-import { Activity, Check, ArrowRight, Zap, Building2, Sparkles } from 'lucide-react';
+'use client';
+
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { SiteHeader } from '@/components/site-header';
-import { SiteFooter } from '@/components/site-footer';
+import { Check, Github } from 'lucide-react';
+import { useState } from 'react';
 
-const pricingTiers = [
-  {
-    name: 'Free',
-    price: '$0',
-    period: 'forever',
-    description: 'Perfect for getting started and small projects',
-    icon: <Sparkles className="h-6 w-6" />,
-    features: [
-      '1,000 traces/month',
-      '7-day retention',
-      'Basic dashboard',
-      'Community support',
-      'Single project',
-      'Core integrations',
-    ],
-    cta: 'Start Free',
-    ctaVariant: 'outline' as const,
-    popular: false,
-  },
-  {
-    name: 'Starter',
-    price: '$49',
-    period: '/month',
-    description: 'For growing teams shipping AI agents to production',
-    icon: <Zap className="h-6 w-6" />,
-    features: [
-      '50,000 traces/month',
-      '30-day retention',
-      'Advanced analytics',
-      'Email support',
-      '5 projects',
-      'All integrations',
-      'Custom alerts',
-      'Team collaboration',
-    ],
-    cta: 'Start Free Trial',
-    ctaVariant: 'default' as const,
-    popular: true,
-  },
-  {
-    name: 'Pro',
-    price: '$149',
-    period: '/month',
-    description: 'For teams with high-volume production workloads',
-    icon: <Activity className="h-6 w-6" />,
-    features: [
-      '500,000 traces/month',
-      '90-day retention',
-      'Advanced analytics',
-      'Priority support',
-      'Unlimited projects',
-      'All integrations',
-      'Custom alerts',
-      'Team collaboration',
-      'SSO (SAML)',
-      'Audit logs',
-    ],
-    cta: 'Start Free Trial',
-    ctaVariant: 'outline' as const,
-    popular: false,
-  },
-  {
-    name: 'Enterprise',
-    price: 'Custom',
-    period: '',
-    description: 'For large organizations with custom requirements',
-    icon: <Building2 className="h-6 w-6" />,
-    features: [
-      'Unlimited traces',
-      'Custom retention',
-      'Dedicated support',
-      'Unlimited projects',
-      'All integrations',
-      'Custom alerts',
-      'Team collaboration',
-      'SSO (SAML/OIDC)',
-      'Audit logs',
-      'On-premise deployment',
-      'SLA guarantee',
-      'Custom integrations',
-    ],
-    cta: 'Contact Sales',
-    ctaVariant: 'outline' as const,
-    popular: false,
-  },
-];
+const FREE = {
+  name: 'Free',
+  price: '$0',
+  cadence: 'forever',
+  cta: 'Sign in →',
+  href: '/login',
+  features: [
+    '10,000 trace events / month',
+    '7-day log retention',
+    '1 project',
+    'Community support',
+    'Python + TypeScript SDKs',
+  ],
+};
 
-const comparisonFeatures = [
-  {
-    category: 'Usage',
-    features: [
-      { name: 'Traces per month', free: '1,000', starter: '50,000', pro: '500,000', enterprise: 'Unlimited' },
-      { name: 'Data retention', free: '7 days', starter: '30 days', pro: '90 days', enterprise: 'Custom' },
-      { name: 'Projects', free: '1', starter: '5', pro: 'Unlimited', enterprise: 'Unlimited' },
-      { name: 'Team members', free: '1', starter: '5', pro: 'Unlimited', enterprise: 'Unlimited' },
-    ],
-  },
-  {
-    category: 'Features',
-    features: [
-      { name: 'Real-time tracing', free: true, starter: true, pro: true, enterprise: true },
-      { name: 'Basic dashboard', free: true, starter: true, pro: true, enterprise: true },
-      { name: 'Advanced analytics', free: false, starter: true, pro: true, enterprise: true },
-      { name: 'Custom alerts', free: false, starter: true, pro: true, enterprise: true },
-      { name: 'Team collaboration', free: false, starter: true, pro: true, enterprise: true },
-      { name: 'SSO authentication', free: false, starter: false, pro: true, enterprise: true },
-      { name: 'Audit logs', free: false, starter: false, pro: true, enterprise: true },
-      { name: 'On-premise deployment', free: false, starter: false, pro: false, enterprise: true },
-    ],
-  },
-  {
-    category: 'Support',
-    features: [
-      { name: 'Community support', free: true, starter: true, pro: true, enterprise: true },
-      { name: 'Email support', free: false, starter: true, pro: true, enterprise: true },
-      { name: 'Priority support', free: false, starter: false, pro: true, enterprise: true },
-      { name: 'Dedicated support', free: false, starter: false, pro: false, enterprise: true },
-      { name: 'SLA guarantee', free: false, starter: false, pro: false, enterprise: true },
-    ],
-  },
-];
+const PRO = {
+  name: 'Pro',
+  price: '$19',
+  cadence: '/ month',
+  cta: 'Upgrade to Pro',
+  features: [
+    '1,000,000 trace events / month',
+    '30-day log retention',
+    'Unlimited projects',
+    'Email support (24h SLA)',
+    'Webhook + REST API export',
+    'Team seats (up to 5)',
+  ],
+  highlight: true,
+};
+
+const SELF_HOST = {
+  name: 'Self-host',
+  price: '$0',
+  cadence: 'open source',
+  cta: 'View on GitHub',
+  href: 'https://github.com/infosiva/agenttrace',
+  features: [
+    'Run on your infra (Docker)',
+    'Unlimited events, no quota',
+    'Your data never leaves your network',
+    'MIT licensed',
+    'Community support via GitHub',
+  ],
+};
 
 export default function PricingPage() {
+  const [upgrading, setUpgrading] = useState(false);
+
+  async function upgrade() {
+    setUpgrading(true);
+    try {
+      const res = await fetch('/api/stripe/checkout', { method: 'POST' });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || 'Checkout unavailable. Please sign in first.');
+      }
+    } finally {
+      setUpgrading(false);
+    }
+  }
+
   return (
-    <div className="flex min-h-screen flex-col">
-      <SiteHeader />
+    <main className="min-h-screen bg-[#020617] text-slate-100 font-mono py-16 px-4">
+      <div className="container mx-auto max-w-5xl">
+        <header className="text-center mb-12">
+          <p className="text-xs text-green-600 uppercase tracking-widest mb-2">// pricing</p>
+          <h1 className="text-4xl font-bold text-white mb-3">Simple. Honest.</h1>
+          <p className="text-slate-400 max-w-xl mx-auto">
+            Free forever for small projects. Pay only when you need scale. Self-host for $0 if you prefer.
+          </p>
+        </header>
 
-      <main className="flex-1">
-        {/* Hero Section */}
-        <section className="container space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-24">
-          <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
-            <h1 className="font-bold text-4xl sm:text-5xl md:text-6xl">
-              Simple, Transparent Pricing
-            </h1>
-            <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
-              Start free, scale as you grow. No hidden fees, cancel anytime.
-            </p>
-          </div>
+        <div className="grid md:grid-cols-3 gap-6">
+          <Tier {...FREE} />
+          <Tier {...PRO} onClick={upgrade} ctaState={upgrading ? 'loading' : 'idle'} />
+          <Tier {...SELF_HOST} external />
+        </div>
+
+        <section className="mt-16 max-w-2xl mx-auto text-center space-y-4">
+          <h2 className="text-xl font-bold text-white">Questions?</h2>
+          <p className="text-sm text-slate-400">
+            Pro plan billed monthly via Stripe, cancel anytime. Need higher volume or SSO?{' '}
+            <a href="mailto:info.siva@gmail.com" className="text-green-400 hover:text-green-300 underline">Email us</a>.
+          </p>
         </section>
+      </div>
+    </main>
+  );
+}
 
-        {/* Pricing Cards */}
-        <section className="container pb-8 pt-6 md:pb-12 md:pt-10">
-          <div className="grid gap-8 lg:grid-cols-4 md:grid-cols-2">
-            {pricingTiers.map((tier) => (
-              <PricingCard key={tier.name} tier={tier} />
-            ))}
-          </div>
-        </section>
+type TierProps = {
+  name: string;
+  price: string;
+  cadence: string;
+  cta: string;
+  features: string[];
+  href?: string;
+  external?: boolean;
+  highlight?: boolean;
+  onClick?: () => void;
+  ctaState?: 'idle' | 'loading';
+};
 
-        {/* Comparison Table */}
-        <section className="container py-8 md:py-12 lg:py-24">
-          <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center mb-12">
-            <h2 className="font-bold text-3xl leading-[1.1] sm:text-3xl md:text-5xl">
-              Compare Plans
-            </h2>
-            <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
-              See exactly what's included in each plan
-            </p>
-          </div>
+function Tier({ name, price, cadence, cta, features, href, external, highlight, onClick, ctaState }: TierProps) {
+  const button = (
+    <button
+      onClick={onClick}
+      disabled={ctaState === 'loading'}
+      className={`w-full font-bold text-sm py-2.5 rounded transition ${
+        highlight
+          ? 'bg-green-500 hover:bg-green-400 text-black'
+          : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
+      } disabled:opacity-60`}
+    >
+      {ctaState === 'loading' ? 'Loading...' : cta}
+    </button>
+  );
 
-          <Card>
-            <CardContent className="p-6">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="px-4 py-3 text-left font-semibold">Feature</th>
-                      <th className="px-4 py-3 text-center font-semibold">Free</th>
-                      <th className="px-4 py-3 text-center font-semibold text-primary">Starter</th>
-                      <th className="px-4 py-3 text-center font-semibold">Pro</th>
-                      <th className="px-4 py-3 text-center font-semibold">Enterprise</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {comparisonFeatures.map((category) => (
-                      <>
-                        <tr key={category.category} className="bg-muted/50">
-                          <td
-                            colSpan={5}
-                            className="px-4 py-3 text-sm font-semibold"
-                          >
-                            {category.category}
-                          </td>
-                        </tr>
-                        {category.features.map((feature) => (
-                          <tr
-                            key={feature.name}
-                            className="border-b"
-                          >
-                            <td className="px-4 py-3 text-sm">
-                              {feature.name}
-                            </td>
-                            <td className="px-4 py-3 text-center text-sm">
-                              <FeatureCell value={feature.free} />
-                            </td>
-                            <td className="px-4 py-3 text-center text-sm bg-primary/5">
-                              <FeatureCell value={feature.starter} />
-                            </td>
-                            <td className="px-4 py-3 text-center text-sm">
-                              <FeatureCell value={feature.pro} />
-                            </td>
-                            <td className="px-4 py-3 text-center text-sm">
-                              <FeatureCell value={feature.enterprise} />
-                            </td>
-                          </tr>
-                        ))}
-                      </>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* FAQ Section */}
-        <section className="container py-8 md:py-12 lg:py-24">
-          <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center mb-12">
-            <h2 className="font-bold text-3xl leading-[1.1] sm:text-3xl md:text-5xl">
-              Frequently Asked Questions
-            </h2>
-          </div>
-
-          <div className="mx-auto grid max-w-[64rem] gap-6 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">What counts as a trace?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  A trace is a single execution of your AI agent, including all steps, LLM calls, and tool uses. If your agent processes one user query, that's one trace.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Can I upgrade or downgrade anytime?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Yes! You can upgrade, downgrade, or cancel your plan at any time. Changes take effect immediately, and we'll prorate any charges.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">What happens if I exceed my trace limit?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  We'll notify you when you're approaching your limit. You can either upgrade your plan or purchase additional traces. We won't cut off your service.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Do you offer discounts for non-profits?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Yes! We offer special pricing for non-profits, educational institutions, and open-source projects. Contact us for details.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Can I self-host AgentTrace?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Yes! AgentTrace is open-source. You can self-host it for free on your own infrastructure. Enterprise plans include support for on-premise deployments.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">What payment methods do you accept?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  We accept all major credit cards, debit cards, and ACH transfers for annual plans. Enterprise customers can pay via invoice.
-                </CardDescription>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="container py-8 md:py-12 lg:py-24">
-          <Card className="border-0 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-            <CardContent className="flex flex-col items-center gap-4 p-12 text-center">
-              <h2 className="font-bold text-3xl leading-[1.1] sm:text-3xl md:text-5xl">
-                Ready to get started?
-              </h2>
-              <p className="max-w-[42rem] leading-normal text-blue-100 sm:text-xl sm:leading-8">
-                Self-host for free or use our managed service. Start with our open-source platform.
-              </p>
-              <div className="flex gap-4">
-                <Button size="lg" variant="secondary" asChild>
-                  <Link href="/dashboard">
-                    Start Free Trial <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-white/10" asChild>
-                  <Link href="/docs">View Documentation</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-      </main>
-
-      <SiteFooter />
+  return (
+    <div className={`border rounded-lg p-6 bg-slate-950/60 flex flex-col ${
+      highlight ? 'border-green-500/40 shadow-[0_0_40px_rgba(34,197,94,0.08)]' : 'border-slate-800'
+    }`}>
+      {highlight && (
+        <span className="self-start text-[10px] uppercase tracking-widest bg-green-500/15 text-green-400 px-2 py-0.5 rounded-full border border-green-500/30 mb-3">
+          Most popular
+        </span>
+      )}
+      <h3 className="text-lg font-bold text-white">{name}</h3>
+      <div className="mt-2 mb-6">
+        <span className="text-3xl font-bold text-white tabular-nums">{price}</span>
+        <span className="text-sm text-slate-500 ml-1">{cadence}</span>
+      </div>
+      <ul className="space-y-2 mb-6 flex-1">
+        {features.map(f => (
+          <li key={f} className="flex items-start gap-2 text-sm text-slate-300">
+            <Check className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+            <span>{f}</span>
+          </li>
+        ))}
+      </ul>
+      {href ? (
+        external ? (
+          <a href={href} target="_blank" rel="noopener noreferrer" className="block">
+            <button className={`w-full font-bold text-sm py-2.5 rounded inline-flex items-center justify-center gap-2 ${
+              highlight ? 'bg-green-500 hover:bg-green-400 text-black' : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
+            }`}>
+              <Github className="w-4 h-4" /> {cta}
+            </button>
+          </a>
+        ) : (
+          <Link href={href} className="block">
+            <button className={`w-full font-bold text-sm py-2.5 rounded ${
+              highlight ? 'bg-green-500 hover:bg-green-400 text-black' : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
+            }`}>
+              {cta}
+            </button>
+          </Link>
+        )
+      ) : (
+        button
+      )}
     </div>
   );
-}
-
-function PricingCard({
-  tier,
-}: {
-  tier: typeof pricingTiers[0];
-}) {
-  return (
-    <Card className={`relative ${tier.popular ? 'border-primary shadow-lg' : ''}`}>
-      {tier.popular && (
-        <div className="absolute -top-3 left-0 right-0 flex justify-center">
-          <Badge className="shadow-md">Most Popular</Badge>
-        </div>
-      )}
-      <CardHeader>
-        <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-          {tier.icon}
-        </div>
-        <CardTitle className="text-2xl">{tier.name}</CardTitle>
-        <CardDescription>{tier.description}</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div>
-          <span className="text-4xl font-bold">{tier.price}</span>
-          <span className="text-muted-foreground">{tier.period}</span>
-        </div>
-        <Button
-          className="w-full"
-          variant={tier.ctaVariant}
-          asChild
-        >
-          <Link href={tier.name === 'Enterprise' ? '/contact' : '/dashboard'}>
-            {tier.cta}
-          </Link>
-        </Button>
-        <ul className="space-y-3">
-          {tier.features.map((feature) => (
-            <li key={feature} className="flex items-start gap-3">
-              <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-              <span className="text-sm">{feature}</span>
-            </li>
-          ))}
-        </ul>
-      </CardContent>
-    </Card>
-  );
-}
-
-function FeatureCell({ value }: { value: string | boolean }) {
-  if (typeof value === 'boolean') {
-    return value ? (
-      <Check className="h-5 w-5 text-green-500 mx-auto" />
-    ) : (
-      <span className="text-muted-foreground">-</span>
-    );
-  }
-  return <span className="font-medium">{value}</span>;
 }
