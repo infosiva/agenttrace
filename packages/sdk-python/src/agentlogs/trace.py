@@ -23,7 +23,7 @@ class TraceStep:
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        duration_ms = (time.time() - self.start_time) * 1000
+        duration_ms = int((time.time() - self.start_time) * 1000)
         if exc_type is not None:
             await self.trace.add_step(
                 name=self.name, step_type=self.step_type,
@@ -98,7 +98,7 @@ class Trace:
         try:
             response = await self.client.client.post(
                 f"/api/v1/traces/{self.trace_id}/steps",
-                json=request.model_dump(exclude_none=True, by_alias=True),
+                json=request.model_dump(exclude_none=True, by_alias=True, mode="json"),
             )
             response.raise_for_status()
         except Exception as e:
@@ -124,7 +124,7 @@ class Trace:
         if self._completed or not self.client.config.enabled or self.trace_id in ("disabled", "error"):
             return
 
-        duration_ms = (time.time() - self.start_time) * 1000
+        duration_ms = int((time.time() - self.start_time) * 1000)
 
         request = UpdateTraceRequest(
             status=status,
@@ -138,7 +138,7 @@ class Trace:
         try:
             response = await self.client.client.patch(
                 f"/api/v1/traces/{self.trace_id}",
-                json=request.model_dump(exclude_none=True, by_alias=True),
+                json=request.model_dump(exclude_none=True, by_alias=True, mode="json"),
             )
             response.raise_for_status()
             self._completed = True

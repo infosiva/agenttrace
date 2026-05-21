@@ -1,6 +1,6 @@
 """AgentLogs Python SDK - AI Agent Observability."""
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from .client import AgentLogs
 from .decorators import trace_agent
