@@ -1,230 +1,190 @@
-import { Activity, Clock, DollarSign, TrendingUp, TrendingDown, AlertCircle } from 'lucide-react';
-import { TracesAreaChart } from '@/components/tremor';
-import type { TraceDataPoint } from '@/components/tremor';
+import { redirect } from 'next/navigation';
+import Link from 'next/link';
+import { auth } from '@/lib/auth';
+import { db, projects, traces } from '@/lib/db';
+import { eq, desc, count, sum, avg, sql } from 'drizzle-orm';
+import { Activity, Clock, DollarSign, TrendingUp, AlertCircle, FolderPlus } from 'lucide-react';
 
-const CHART_DATA: TraceDataPoint[] = [
-  { date: 'May 04', traces: 320, errors: 12 },
-  { date: 'May 05', traces: 480, errors: 8 },
-  { date: 'May 06', traces: 410, errors: 15 },
-  { date: 'May 07', traces: 650, errors: 4 },
-  { date: 'May 08', traces: 720, errors: 6 },
-  { date: 'May 09', traces: 540, errors: 9 },
-];
+export const dynamic = 'force-dynamic';
 
-export default function DashboardPage() {
+export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ project?: string }> }) {
+  const session = await auth();
+  if (!session?.user?.id) redirect('/login?callbackUrl=/dashboard');
+
+  const params = await searchParams;
+  const userProjects = await db
+    .select()
+    .from(projects)
+    .where(eq(projects.userId, session.user.id))
+    .orderBy(desc(projects.createdAt));
+
+  if (userProjects.length === 0) return <NoProjectsState />;
+
+  const activeProject = (params.project && userProjects.find(p => p.id === params.project)) || userProjects[0];
+
+  const [stats] = await db
+    .select({
+      total: count(traces.id),
+      errors: sql<number>`count(*) filter (where ${traces.status} = 'error')`.mapWith(Number),
+      avgDuration: avg(traces.durationMs).mapWith(Number),
+      totalCost: sum(traces.totalCost).mapWith(Number),
+      totalTokens: sum(traces.totalTokens).mapWith(Number),
+    })
+    .from(traces)
+    .where(eq(traces.projectId, activeProject.id));
+
+  const recent = await db
+    .select({
+      id: traces.id,
+      name: traces.name,
+      status: traces.status,
+      durationMs: traces.durationMs,
+      totalCost: traces.totalCost,
+      totalTokens: traces.totalTokens,
+      startedAt: traces.startedAt,
+    })
+    .from(traces)
+    .where(eq(traces.projectId, activeProject.id))
+    .orderBy(desc(traces.startedAt))
+    .limit(10);
+
+  const errorRate = stats.total > 0 ? ((stats.errors / stats.total) * 100).toFixed(1) : '0.0';
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-2">
-              <Activity className="h-6 w-6 text-blue-600" />
-              <span className="font-bold text-xl">AgentTrace</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600 dark:text-gray-400">
-                demo-project
-              </span>
-              <div className="h-8 w-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
-                U
-              </div>
-            </div>
+    <main className="min-h-screen bg-[#020617] text-slate-100 font-mono py-8 px-4">
+      <div className="container mx-auto max-w-6xl">
+        <header className="mb-8 flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <p className="text-xs text-green-600 uppercase tracking-widest mb-2">// project: {activeProject.slug}</p>
+            <h1 className="text-3xl font-bold text-white">{activeProject.name}</h1>
+            <p className="text-sm text-slate-400 mt-1">
+              Logged in as <span className="text-green-400">{session.user.email}</span>
+            </p>
           </div>
-        </div>
-      </nav>
+          {userProjects.length > 1 && (
+            <select
+              defaultValue={activeProject.id}
+              className="bg-slate-950 border border-slate-700 text-sm text-slate-200 px-3 py-2 rounded"
+              onChange={e => { window.location.href = `/dashboard?project=${e.target.value}`; }}
+            >
+              {userProjects.map(p => (
+                <option key={p.id} value={p.id}>{p.name}</option>
+              ))}
+            </select>
+          )}
+        </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Dashboard
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Monitor your AI agents in real-time
-          </p>
-        </div>
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <Metric icon={Activity} label="Total traces" value={stats.total.toLocaleString()} accent="text-green-400" />
+          <Metric icon={Clock} label="Avg duration" value={stats.avgDuration ? `${Math.round(stats.avgDuration)}ms` : '—'} accent="text-cyan-400" />
+          <Metric icon={DollarSign} label="Total cost" value={stats.totalCost ? `$${stats.totalCost.toFixed(3)}` : '$0'} accent="text-yellow-400" />
+          <Metric icon={AlertCircle} label="Error rate" value={`${errorRate}%`} accent={stats.errors > 0 ? 'text-red-400' : 'text-green-400'} />
+        </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <MetricCard
-            title="Total Traces"
-            value="1,234"
-            change="+12.5%"
-            icon={<Activity className="h-5 w-5" />}
-          />
-          <MetricCard
-            title="Avg Duration"
-            value="2.3s"
-            change="-5.2%"
-            icon={<Clock className="h-5 w-5" />}
-          />
-          <MetricCard
-            title="Total Cost"
-            value="$45.32"
-            change="+8.1%"
-            icon={<DollarSign className="h-5 w-5" />}
-          />
-          <MetricCard
-            title="Error Rate"
-            value="2.1%"
-            change="-1.2%"
-            icon={<AlertCircle className="h-5 w-5" />}
-            trend="down"
-          />
-        </div>
-
-        {/* Tremor area chart */}
-        <div className="mb-6">
-          <TracesAreaChart data={CHART_DATA} title="Trace volume — last 6 days" />
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Recent Traces</h2>
-            <span className="text-xs text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">Demo data</span>
+        <section className="border border-slate-800 rounded-lg bg-slate-950/60 overflow-hidden">
+          <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
+            <h2 className="text-sm font-bold text-white uppercase tracking-widest">Recent traces</h2>
+            <Link href="/traces" className="text-xs text-green-400 hover:text-green-300">View all →</Link>
           </div>
-          <div className="space-y-3">
-            <TraceRow
-              name="user-query-agent"
-              duration="1.2s"
-              tokens="450"
-              cost="$0.012"
-              status="success"
-              timestamp="2 minutes ago"
-            />
-            <TraceRow
-              name="document-analyzer"
-              duration="3.5s"
-              tokens="1200"
-              cost="$0.034"
-              status="success"
-              timestamp="5 minutes ago"
-            />
-            <TraceRow
-              name="code-reviewer"
-              duration="2.1s"
-              tokens="800"
-              cost="$0.021"
-              status="error"
-              timestamp="8 minutes ago"
-            />
-          </div>
-          {/* Empty state / connect CTA */}
-          <div className="mt-6 border-t border-gray-100 dark:border-gray-700 pt-5">
-            <div className="rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-600 p-6 text-center">
-              <Activity className="h-8 w-8 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">No live traces yet</p>
-              <p className="text-xs text-gray-400 dark:text-gray-500 mb-4 max-w-xs mx-auto">
-                Connect your agent to start seeing real trace data here. Takes 60 seconds.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                <a href="/docs" className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                  View quickstart guide →
-                </a>
-                <button className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 rounded-lg hover:border-gray-300 transition">
-                  Browse integrations
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
-          <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
-            Getting Started
-          </h3>
-          <p className="text-sm text-blue-800 dark:text-blue-200 mb-4">
-            Install the SDK and start tracing your agents:
-          </p>
-          <pre className="bg-white dark:bg-gray-900 p-4 rounded-md text-sm overflow-x-auto border border-blue-200 dark:border-blue-800">
-            <code>pip install agenttrace-sdk</code>
-          </pre>
-        </div>
-      </main>
-    </div>
+          {recent.length === 0 ? (
+            <FirstTraceEmptyState />
+          ) : (
+            <table className="w-full text-sm">
+              <thead className="bg-black/40 border-b border-slate-800">
+                <tr>
+                  <th className="text-left text-xs text-slate-500 uppercase px-4 py-2 font-semibold">Name</th>
+                  <th className="text-left text-xs text-slate-500 uppercase px-4 py-2 font-semibold">Status</th>
+                  <th className="text-left text-xs text-slate-500 uppercase px-4 py-2 font-semibold">Duration</th>
+                  <th className="text-left text-xs text-slate-500 uppercase px-4 py-2 font-semibold">Tokens</th>
+                  <th className="text-left text-xs text-slate-500 uppercase px-4 py-2 font-semibold">Cost</th>
+                  <th className="text-left text-xs text-slate-500 uppercase px-4 py-2 font-semibold">Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recent.map(t => (
+                  <tr key={t.id} className="border-b border-slate-900 last:border-0">
+                    <td className="px-4 py-3 text-slate-200">{t.name}</td>
+                    <td className="px-4 py-3"><StatusBadge status={t.status} /></td>
+                    <td className="px-4 py-3 text-slate-400">{t.durationMs ? `${t.durationMs}ms` : '—'}</td>
+                    <td className="px-4 py-3 text-slate-400">{t.totalTokens ?? '—'}</td>
+                    <td className="px-4 py-3 text-slate-400">{t.totalCost ? `$${t.totalCost.toFixed(4)}` : '—'}</td>
+                    <td className="px-4 py-3 text-slate-500 text-xs">{relativeTime(t.startedAt)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </section>
+      </div>
+    </main>
   );
 }
 
-function MetricCard({
-  title,
-  value,
-  change,
-  icon,
-  trend = 'up',
-}: {
-  title: string;
-  value: string;
-  change: string;
-  icon: React.ReactNode;
-  trend?: 'up' | 'down';
-}) {
-  const isPositive = trend === 'up' ? change.startsWith('+') : change.startsWith('-');
-
+function Metric({ icon: Icon, label, value, accent }: { icon: typeof Activity; label: string; value: string; accent: string }) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+    <div className="border border-slate-800 bg-slate-950/60 rounded-lg p-4">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm text-gray-600 dark:text-gray-400">{title}</span>
-        <div className="text-gray-400">{icon}</div>
+        <span className="text-xs text-slate-500 uppercase tracking-widest">{label}</span>
+        <Icon className={`w-4 h-4 ${accent}`} />
       </div>
-      <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-        {value}
-      </div>
-      <div
-        className={`text-sm flex items-center gap-1 ${
-          isPositive
-            ? 'text-green-600 dark:text-green-400'
-            : 'text-red-600 dark:text-red-400'
-        }`}
-      >
-        {isPositive ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
-        {change} from last week
-      </div>
+      <div className={`text-2xl font-bold tabular-nums ${accent}`}>{value}</div>
     </div>
   );
 }
 
-function TraceRow({
-  name,
-  duration,
-  tokens,
-  cost,
-  status,
-  timestamp,
-}: {
-  name: string;
-  duration: string;
-  tokens: string;
-  cost: string;
-  status: 'success' | 'error';
-  timestamp: string;
-}) {
+function StatusBadge({ status }: { status: string }) {
+  const styles: Record<string, string> = {
+    success: 'bg-green-500/10 text-green-400 border-green-500/30',
+    error: 'bg-red-500/10 text-red-400 border-red-500/30',
+    running: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30',
+  };
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition cursor-pointer gap-3 sm:gap-0">
-      <div className="flex items-center gap-3">
-        <div
-          className={`h-2 w-2 rounded-full shrink-0 ${
-            status === 'success' ? 'bg-green-500' : 'bg-red-500'
-          }`}
-        />
-        <div className="min-w-0">
-          <div className="font-medium text-gray-900 dark:text-white truncate">{name}</div>
-          <div className="text-xs text-gray-500 dark:text-gray-400">
-            {timestamp} · {status === 'error' ? <span className="text-red-500">error</span> : <span className="text-green-600 dark:text-green-400">success</span>}
-          </div>
+    <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded border ${styles[status] ?? styles.running}`}>
+      {status}
+    </span>
+  );
+}
+
+function relativeTime(date: Date): string {
+  const diff = Date.now() - date.getTime();
+  const seconds = Math.floor(diff / 1000);
+  if (seconds < 60) return `${seconds}s ago`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  return `${Math.floor(hours / 24)}d ago`;
+}
+
+function NoProjectsState() {
+  return (
+    <main className="min-h-screen bg-[#020617] text-slate-100 font-mono flex items-center justify-center p-8">
+      <div className="max-w-md text-center space-y-6">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/10 border border-green-500/30">
+          <FolderPlus className="w-8 h-8 text-green-400" />
         </div>
+        <div>
+          <h1 className="text-2xl font-bold text-white mb-2">Welcome to AgentLogs</h1>
+          <p className="text-sm text-slate-400">Create your first project to start tracing AI agents.</p>
+        </div>
+        <Link
+          href="/settings"
+          className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black font-bold text-sm px-5 py-2.5 rounded"
+        >
+          Create project →
+        </Link>
       </div>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm pl-5 sm:pl-0">
-        <div>
-          <span className="text-gray-500 dark:text-gray-400">Duration: </span>
-          <span className="text-gray-900 dark:text-white font-medium">{duration}</span>
-        </div>
-        <div>
-          <span className="text-gray-500 dark:text-gray-400">Tokens: </span>
-          <span className="text-gray-900 dark:text-white font-medium">{tokens}</span>
-        </div>
-        <div>
-          <span className="text-gray-500 dark:text-gray-400">Cost: </span>
-          <span className="text-gray-900 dark:text-white font-medium">{cost}</span>
-        </div>
-      </div>
+    </main>
+  );
+}
+
+function FirstTraceEmptyState() {
+  return (
+    <div className="p-12 text-center">
+      <TrendingUp className="w-8 h-8 text-slate-700 mx-auto mb-3" />
+      <p className="text-sm text-slate-400 mb-2">No traces yet.</p>
+      <p className="text-xs text-slate-500 mb-6">Install the SDK and send your first trace.</p>
+      <Link href="/docs" className="text-xs text-green-400 hover:text-green-300 underline">View quickstart →</Link>
     </div>
   );
 }

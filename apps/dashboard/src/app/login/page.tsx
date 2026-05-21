@@ -1,203 +1,150 @@
 'use client';
 
-import { Activity, Mail, Lock, Github, Chrome } from 'lucide-react';
+import { Activity, Mail, CheckCircle2, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useState, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 
-export default function LoginPage() {
+function LoginInner() {
+  const params = useSearchParams();
+  const checkEmail = params.get('check') === 'email';
+
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>(
+    checkEmail ? 'sent' : 'idle'
+  );
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // TODO: Implement authentication logic
-    console.log('Login/Signup:', { email, password, isSignUp });
-  };
+    if (!email) return;
+    setState('sending');
+    setError(null);
+    try {
+      const result = await signIn('email', {
+        email,
+        redirect: false,
+        callbackUrl: '/dashboard',
+      });
+      if (result?.error) {
+        setError(result.error);
+        setState('error');
+      } else {
+        setState('sent');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'unknown_error');
+      setState('error');
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex flex-col">
-      <nav className="border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <Link href="/" className="flex items-center gap-2">
-              <Activity className="h-6 w-6 text-blue-600" />
-              <span className="font-bold text-xl">AgentTrace</span>
-            </Link>
-            <div className="flex gap-4">
-              <Link
-                href="/docs"
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600"
-              >
-                Docs
-              </Link>
-              <Link
-                href="/pricing"
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600"
-              >
-                Pricing
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className="w-full max-w-md">
+      <div className="flex items-center justify-center gap-2 mb-8">
+        <Activity className="w-6 h-6 text-green-500" />
+        <span className="font-bold text-xl tracking-tight">AgentLogs</span>
+        <span className="text-[10px] bg-green-500/10 text-green-400 px-1.5 py-0.5 rounded-full border border-green-500/20 font-semibold uppercase tracking-wider">Beta</span>
+      </div>
 
-      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
-        <div className="max-w-md w-full space-y-8">
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-4">
-              <Activity className="h-8 w-8 text-blue-600" />
+      <div className="border border-slate-800 bg-slate-950/60 rounded-lg p-8 backdrop-blur-sm">
+        {state === 'sent' ? (
+          <div className="text-center space-y-4">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-500/10 border border-green-500/30">
+              <CheckCircle2 className="w-6 h-6 text-green-400" />
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              {isSignUp ? 'Create your account' : 'Welcome back'}
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              {isSignUp
-                ? 'Start tracing your AI agents in minutes'
-                : 'Sign in to your AgentTrace account'}
+            <h1 className="text-xl font-bold text-white">Check your email</h1>
+            <p className="text-sm text-slate-400">
+              We sent a sign-in link to{' '}
+              <span className="text-green-400">{email || 'your inbox'}</span>.
+              Click it to continue.
+            </p>
+            <p className="text-xs text-slate-500 pt-2">
+              Link expires in 24 hours. Didn&apos;t arrive?{' '}
+              <button
+                type="button"
+                onClick={() => {
+                  setState('idle');
+                  setEmail('');
+                }}
+                className="text-green-400 hover:text-green-300 underline"
+              >
+                Try again
+              </button>
             </p>
           </div>
-
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-8">
-            <div className="space-y-4 mb-6">
-              <button
-                type="button"
-                className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
-              >
-                <Github className="h-5 w-5" />
-                Continue with GitHub
-              </button>
-              <button
-                type="button"
-                className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
-              >
-                <Chrome className="h-5 w-5" />
-                Continue with Google
-              </button>
-            </div>
-
-            <div className="relative mb-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-                  Or continue with email
-                </span>
-              </div>
+        ) : (
+          <>
+            <div className="mb-6">
+              <h1 className="text-xl font-bold text-white mb-1">Sign in to AgentLogs</h1>
+              <p className="text-sm text-slate-400">No password. We&apos;ll email you a magic link.</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                >
-                  Email address
+                <label htmlFor="email" className="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">
+                  Email
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                   <input
                     id="email"
                     type="email"
                     required
+                    autoComplete="email"
+                    autoFocus
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-900 dark:text-white"
-                    placeholder="you@example.com"
+                    onChange={e => setEmail(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 bg-black/40 border border-slate-700 rounded-md text-sm text-white placeholder-slate-600 focus:border-green-500/60 focus:outline-none focus:ring-1 focus:ring-green-500/30"
+                    placeholder="you@company.com"
                   />
                 </div>
               </div>
-
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                >
-                  Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <input
-                    id="password"
-                    type="password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-900 dark:text-white"
-                    placeholder="••••••••"
-                  />
-                </div>
-              </div>
-
-              {!isSignUp && (
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <input
-                      id="remember-me"
-                      type="checkbox"
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <label
-                      htmlFor="remember-me"
-                      className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
-                    >
-                      Remember me
-                    </label>
-                  </div>
-                  <Link
-                    href="/forgot-password"
-                    className="text-sm font-medium text-blue-600 hover:text-blue-700"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-              )}
 
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition"
+                disabled={state === 'sending' || !email}
+                className="w-full inline-flex items-center justify-center gap-2 bg-green-500 hover:bg-green-400 disabled:bg-slate-700 disabled:text-slate-500 text-black font-bold text-sm py-2.5 rounded-md transition"
               >
-                {isSignUp ? 'Create account' : 'Sign in'}
+                {state === 'sending' ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  'Send magic link →'
+                )}
               </button>
+
+              {error && (
+                <p className="text-xs text-red-400 bg-red-950/30 border border-red-900/40 rounded px-3 py-2">
+                  {error}
+                </p>
+              )}
             </form>
-
-            <div className="mt-6 text-center">
-              <button
-                type="button"
-                onClick={() => setIsSignUp(!isSignUp)}
-                className="text-sm text-gray-600 dark:text-gray-400"
-              >
-                {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
-                <span className="font-medium text-blue-600 hover:text-blue-700">
-                  {isSignUp ? 'Sign in' : 'Sign up'}
-                </span>
-              </button>
-            </div>
-          </div>
-
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-            <p className="text-sm text-blue-800 dark:text-blue-200 text-center">
-              By signing up, you agree to our{' '}
-              <Link href="/terms" className="font-medium underline">
-                Terms of Service
-              </Link>{' '}
-              and{' '}
-              <Link href="/privacy" className="font-medium underline">
-                Privacy Policy
-              </Link>
-            </p>
-          </div>
-
-          {isSignUp && (
-            <div className="text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Start with our <strong>free tier</strong> - no credit card required
-              </p>
-            </div>
-          )}
-        </div>
+          </>
+        )}
       </div>
+
+      <p className="text-xs text-slate-500 text-center mt-6">
+        By signing in, you agree to our{' '}
+        <Link href="/terms" className="text-slate-400 hover:text-green-400 underline">Terms</Link>
+        {' '}and{' '}
+        <Link href="/privacy" className="text-slate-400 hover:text-green-400 underline">Privacy</Link>
+        .
+      </p>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <main className="min-h-screen bg-[#020617] text-slate-100 font-mono flex flex-col">
+      <div className="flex-1 flex items-center justify-center px-4 py-16">
+        <Suspense fallback={<div className="text-slate-500">Loading...</div>}>
+          <LoginInner />
+        </Suspense>
+      </div>
+    </main>
   );
 }
