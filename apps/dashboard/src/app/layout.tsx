@@ -56,31 +56,39 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         }) }} />
         <style dangerouslySetInnerHTML={{ __html: `
           :root {
-            --bg: #020617;
-            --surface: #0f172a;
-            --surface-2: #1e293b;
-            --border: rgba(51,65,85,0.6);
-            --text: #f8fafc;
-            --text-2: rgba(148,163,184,0.9);
-            --accent: #22c55e;
-            --accent-dim: rgba(34,197,94,0.1);
-            --blue: #3b82f6;
+            --theme-primary: #00e5ff;
+            --theme-secondary: #39ff14;
+            --theme-base: #050a0f;
+            --background: #050a0f;
+            --surface-1: #0a1520;
+            --surface-2: #0f1e2e;
+            --foreground: #e0f7fa;
+            --text-2: #80deea;
+            --border-default: rgba(0,229,255,0.12);
+            --border-strong: rgba(0,229,255,0.25);
+            /* legacy aliases for existing components */
+            --bg: #050a0f;
+            --surface: #0a1520;
+            --border: rgba(0,229,255,0.12);
+            --text: #e0f7fa;
+            --accent: #39ff14;
+            --accent-dim: rgba(57,255,20,0.08);
+            --blue: #00e5ff;
           }
-          html, body { background: #020617 !important; color: #f8fafc !important; font-family: var(--font-body, system-ui) !important; }
-          code, pre, .mono { font-family: var(--font-mono, monospace) !important; }
+          html, body { background: #050a0f !important; color: #e0f7fa !important; font-family: var(--font-body, system-ui) !important; }
+          code, pre, .mono { font-family: var(--font-mono, 'JetBrains Mono', monospace) !important; }
+          .glass { background: rgba(5,10,15,0.75) !important; border-color: rgba(0,229,255,0.1) !important; }
           /* Nav upgrade */
-          nav { background: rgba(2,6,23,0.95) !important; border-bottom: 1px solid rgba(51,65,85,0.5) !important; backdrop-filter: blur(12px); }
+          nav { background: rgba(5,10,15,0.92) !important; border-bottom: 1px solid rgba(0,229,255,0.12) !important; backdrop-filter: blur(20px); }
         `}} />
       </head>
-      <body className={`${inter.variable} ${jetbrains.variable}`} style={{ background: '#020617', color: '#f8fafc' }}>
+      <body className={`${inter.variable} ${jetbrains.variable}`} style={{ background: '#050a0f', color: '#e0f7fa' }}>
         <Providers>
           <AppNav />
           {children}
           <ChatBot />
         </Providers>
-        {/* eslint-disable-next-line @next/next/no-before-interactive-script-outside-document */}
-        <script src="http://31.97.56.148:3098/t.js" data-site="agentlogs.app" defer></script>
-            <Script async src="http://31.97.56.148:3100/script.js" data-website-id="56dc060a-d35d-4de6-b925-c9dba0ec3542" strategy="afterInteractive" />
+        <Script defer data-domain="agentlogs.app" src="https://plausible.io/js/script.js" strategy="afterInteractive" />
       </body>
     </html>
   );
