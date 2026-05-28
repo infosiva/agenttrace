@@ -15,11 +15,19 @@ interface Message { role: 'user' | 'assistant'; content: string }
 
 export default function ChatBot() {
   const [open, setOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const [messages, setMessages] = useState<Message[]>([{ role: 'assistant', content: WELCOME }])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -69,10 +77,29 @@ export default function ChatBot() {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() }
   }
 
+  const BOTTOM_OFFSET = 84
+  const panelStyle: React.CSSProperties = isMobile ? {
+    position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9998,
+    width: '100%', height: `calc(100dvh - ${BOTTOM_OFFSET}px)`,
+    borderRadius: '16px 16px 0 0',
+    background: '#020a04', border: `1px solid rgba(34,197,94,0.25)`,
+    boxShadow: '0 -8px 40px rgba(0,0,0,0.8)',
+    display: 'flex', flexDirection: 'column', overflow: 'hidden',
+    animation: 'trace-slide-bottom 0.3s cubic-bezier(0.23,1,0.32,1)',
+  } : {
+    position: 'fixed', bottom: 88, right: 24, zIndex: 9998,
+    width: 360, height: 500, borderRadius: 16,
+    background: '#020a04', border: `1px solid rgba(34,197,94,0.25)`,
+    boxShadow: '0 8px 40px rgba(0,0,0,0.7), 0 0 40px rgba(34,197,94,0.1)',
+    display: 'flex', flexDirection: 'column', overflow: 'hidden',
+    animation: 'trace-slide-up 0.22s ease-out',
+  }
+
   return (
     <>
       <style>{`
         @keyframes trace-slide-up { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes trace-slide-bottom { from { transform:translateY(100%); } to { transform:translateY(0); } }
         @keyframes trace-bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
         .trace-msg::-webkit-scrollbar { width:4px; }
         .trace-msg::-webkit-scrollbar-track { background:transparent; }
@@ -106,18 +133,12 @@ export default function ChatBot() {
       </button>
 
       {open && (
-        <div style={{
-          position: 'fixed', bottom: 88, right: 24, zIndex: 9998,
-          width: 360, height: 500, borderRadius: 16,
-          background: '#020a04', border: `1px solid rgba(34,197,94,0.25)`,
-          boxShadow: '0 8px 40px rgba(0,0,0,0.7), 0 0 40px rgba(34,197,94,0.1)',
-          display: 'flex', flexDirection: 'column', overflow: 'hidden',
-          animation: 'trace-slide-up 0.22s ease-out',
-        }}>
+        <div style={panelStyle}>
           <div style={{
             padding: '12px 16px', borderBottom: `1px solid rgba(34,197,94,0.2)`,
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             background: 'linear-gradient(135deg, rgba(34,197,94,0.15) 0%, rgba(22,163,74,0.08) 100%)',
+            flexShrink: 0,
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <div style={{
@@ -141,7 +162,7 @@ export default function ChatBot() {
             </button>
           </div>
 
-          <div className="trace-msg" style={{ flex: 1, overflowY: 'auto', padding: '14px 14px 6px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div className="trace-msg" style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '14px 14px 6px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             {messages.map((m, i) => (
               <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
                 <div style={{
@@ -168,13 +189,13 @@ export default function ChatBot() {
             <div ref={bottomRef} />
           </div>
 
-          <div style={{ padding: '10px 12px', borderTop: `1px solid rgba(34,197,94,0.15)`, display: 'flex', gap: 8, alignItems: 'center', background: 'rgba(0,0,0,0.3)' }}>
+          <div style={{ padding: '10px 12px', borderTop: `1px solid rgba(34,197,94,0.15)`, display: 'flex', gap: 8, alignItems: 'center', background: 'rgba(0,0,0,0.3)', flexShrink: 0, paddingBottom: 'max(10px, env(safe-area-inset-bottom))' }}>
             <input
               ref={inputRef} value={input}
               onChange={e => setInput(e.target.value)} onKeyDown={onKey}
               placeholder="Ask about traces, debugging, monitoring…"
               disabled={loading}
-              style={{ flex: 1, background: 'rgba(34,197,94,0.06)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: 10, padding: '9px 13px', color: '#f0f0f0', fontSize: 13.5, outline: 'none' }}
+              style={{ flex: 1, background: 'rgba(34,197,94,0.06)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: 10, padding: '9px 13px', color: '#f0f0f0', fontSize: isMobile ? 16 : 13.5, outline: 'none' }}
               onFocus={e => (e.target.style.borderColor = ACCENT)}
               onBlur={e => (e.target.style.borderColor = 'rgba(34,197,94,0.25)')}
             />
