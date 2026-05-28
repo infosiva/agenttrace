@@ -4,6 +4,7 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/providers';
 import ChatBot from '@/components/ChatBot';
+import { getSiteFlags } from '@/lib/flags';
 import AppNav from '@/components/AppNav';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-body' });
@@ -36,7 +37,8 @@ export const metadata: Metadata = {
   robots: 'index, follow'
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const flags = await getSiteFlags('agenttrace')
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -83,10 +85,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         `}} />
       </head>
       <body className={`${inter.variable} ${jetbrains.variable}`} style={{ background: '#050a0f', color: '#e0f7fa' }}>
+        <div className="aurora aurora-primary" aria-hidden />
+        <div className="aurora aurora-secondary" aria-hidden />
+        <div className="aurora aurora-third" aria-hidden />
+        <div className="grain" aria-hidden />
         <Providers>
           <AppNav />
           {children}
-          <ChatBot />
+          {flags.chatbot && <ChatBot />}
         </Providers>
         <Script defer data-domain="agentlogs.app" src="https://plausible.io/js/script.js" strategy="afterInteractive" />
         <Script defer data-site="agentlogs.app" src="http://31.97.56.148:3098/t.js" strategy="afterInteractive" />
