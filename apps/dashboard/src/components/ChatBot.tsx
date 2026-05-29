@@ -5,11 +5,10 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 const ACCENT = '#22c55e'
 const ACCENT2 = '#16a34a'
 const BOT_NAME = 'TraceBot'
-const WELCOME = '🔍 Hi! I\'m TraceBot — your AI observability assistant. Ask me about agent traces, debugging AI pipelines, understanding logs, or monitoring best practices!'
-const SYSTEM_PROMPT = `You are TraceBot, the AI assistant for AgentTrace — an AI agent observability and debugging platform.
-Help developers understand trace data, debug AI pipelines, interpret agent logs, set up monitoring, and follow observability best practices.
-Be technical, precise, and practical. Focus on actionable advice for AI/ML engineers.
-Keep responses concise but thorough. Use code examples when relevant.`
+const WELCOME = "I'm TraceBot. Paste a trace ID or describe a pipeline issue — I'll help you debug it. Works with any agent framework."
+const SYSTEM_PROMPT = `You are TraceBot, the AI assistant for AgentTrace — a framework-agnostic AI agent observability platform.
+Help developers debug AI pipelines across any framework (LangChain, LlamaIndex, custom agents). Interpret trace data, diagnose errors, explain LLM call costs, and advise on monitoring best practices.
+Be technical, precise, and direct. Lead with the diagnosis, then explain. Use code snippets when relevant. Keep responses concise.`
 
 interface Message { role: 'user' | 'assistant'; content: string }
 

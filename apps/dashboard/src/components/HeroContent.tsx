@@ -17,14 +17,13 @@ export default function HeroContent() {
 
       <div className="text-center mb-12">
         <h1 className="font-mono font-bold text-4xl sm:text-5xl md:text-6xl text-white mb-6 leading-tight">
-          Monitor, debug, and{' '}
-          <span className="text-green-400">optimize</span>
+          See exactly what your{' '}
+          <span className="text-green-400">AI agents</span>
           <br />
-          your AI agents{' '}
-          <span className="text-cyan-400">in real-time</span>
+          <span className="text-cyan-400">did.</span>
         </h1>
         <p className="text-green-700 text-lg sm:text-xl max-w-2xl mx-auto font-mono leading-relaxed">
-          Complete observability for production AI agents. Every LLM call, tool use,<br className="hidden sm:block" />
+          Framework-agnostic observability for production agents. Every LLM call, tool use,<br className="hidden sm:block" />
           error, and cost — traced and queryable in seconds.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
