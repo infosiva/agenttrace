@@ -75,9 +75,21 @@ export default async function TracesPage({ searchParams }: { searchParams: Promi
                 </tr>
               </thead>
               <tbody>
-                {rows.map(r => (
+                {rows.map(r => {
+                  const isLive = Date.now() - r.startedAt.getTime() < 60_000;
+                  return (
                   <tr key={r.id} className="border-b border-slate-900 last:border-0 hover:bg-slate-900/50">
-                    <td className="px-4 py-3 text-slate-200">{r.name}</td>
+                    <td className="px-4 py-3 text-slate-200">
+                      <span className="flex items-center gap-2">
+                        {r.name}
+                        {isLive && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-green-400 bg-green-500/10 border border-green-500/30 px-1.5 py-0.5 rounded">
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                            LIVE
+                          </span>
+                        )}
+                      </span>
+                    </td>
                     <td className="px-4 py-3">
                       <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded border ${
                         r.status === 'success' ? 'bg-green-500/10 text-green-400 border-green-500/30' :
@@ -90,7 +102,8 @@ export default async function TracesPage({ searchParams }: { searchParams: Promi
                     <td className="px-4 py-3 text-slate-400">{r.totalCost ? `$${r.totalCost.toFixed(4)}` : '—'}</td>
                     <td className="px-4 py-3 text-slate-500 text-xs">{r.startedAt.toLocaleString()}</td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           )}

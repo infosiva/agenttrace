@@ -229,15 +229,14 @@ export default function HomePage() {
 
           <div className="text-center mb-12">
             <h1 className="font-mono font-bold text-4xl sm:text-5xl md:text-6xl text-white mb-6 leading-tight">
-              Monitor, debug, and{' '}
-              <span className="text-green-400">optimize</span>
+              Agent observability{' '}
+              <span className="text-green-400">built for agents</span>
               <br />
-              your AI agents{' '}
-              <span className="text-cyan-400">in real-time</span>
+              <span className="text-cyan-400 text-3xl sm:text-4xl md:text-5xl">— not retrofitted from LLM logging.</span>
             </h1>
             <p className="text-green-700 text-lg sm:text-xl max-w-2xl mx-auto font-mono leading-relaxed">
-              Complete observability for production AI agents. Every LLM call, tool use,<br className="hidden sm:block" />
-              error, and cost — traced and queryable in seconds.
+              Real-time trace view, issue lifecycle tracking, and step-by-step execution<br className="hidden sm:block" />
+              — for AI agents that actually run.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
               <Link href="/dashboard" className="font-mono text-sm bg-green-500 hover:bg-green-400 text-black font-bold px-6 py-3 rounded transition-colors flex items-center gap-2">
@@ -402,11 +401,13 @@ with client.trace("agent-run") as trace:
               <tbody>
                 {[
                   { feature: 'Agent-Focused', at: true, ls: true, h: false, a: true },
+                  { feature: 'Real-time Trace View', at: true, ls: false, h: false, a: false },
+                  { feature: 'Issue Lifecycle Tracking', at: true, ls: false, h: false, a: false },
                   { feature: 'Multi-Step Tracing', at: true, ls: true, h: false, a: true },
                   { feature: 'Cost Analytics', at: true, ls: true, h: true, a: true },
                   { feature: 'Self-Hosting', at: true, ls: false, h: false, a: false },
                   { feature: 'Open Source', at: true, ls: false, h: false, a: false },
-                  { feature: 'Starting Price', at: 'Free', ls: '$39/mo', h: 'Free', a: '$500+/mo' },
+                  { feature: 'Starting Price', at: 'Free', ls: '$39/mo', h: 'maintenance', a: '$500+/mo' },
                 ].map((row, i) => (
                   <tr key={i} className="border-b border-green-900/30 hover:bg-green-950/10 transition-colors">
                     <td className="px-4 py-3 text-green-600 text-xs">{row.feature}</td>

@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth';
 import { db, projects, traces } from '@/lib/db';
 import { eq, desc, count, sum, avg, sql } from 'drizzle-orm';
 import { Activity, Clock, DollarSign, TrendingUp, AlertCircle, FolderPlus } from 'lucide-react';
+import IssueInbox from '@/components/IssueInbox';
 
 export const dynamic = 'force-dynamic';
 
@@ -81,7 +82,9 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           <Metric icon={AlertCircle} label="Error rate" value={`${errorRate}%`} accent={stats.errors > 0 ? 'text-red-400' : 'text-green-400'} />
         </section>
 
-        <section className="border border-slate-800 rounded-lg bg-slate-950/60 overflow-hidden">
+        <IssueInbox projectId={activeProject.id} />
+
+        <section className="border border-slate-800 rounded-lg bg-slate-950/60 overflow-hidden mt-6">
           <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
             <h2 className="text-sm font-bold text-white uppercase tracking-widest">Recent traces</h2>
             <Link href="/traces" className="text-xs text-green-400 hover:text-green-300">View all →</Link>
