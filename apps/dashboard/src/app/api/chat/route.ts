@@ -29,9 +29,9 @@ Keep responses concise but thorough. Use code examples when relevant.`
     ]
 
     const stream = await groq.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
+      model: 'llama-3.1-8b-instant',
       messages: chatMessages,
-      max_tokens: 600,
+      max_tokens: 300,
       temperature: 0.7,
       stream: true,
     })
