@@ -1,7 +1,8 @@
 import Groq from 'groq-sdk'
 import { NextRequest, NextResponse } from 'next/server'
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
+let _groq: Groq | null = null
+function getGroq() { if (!_groq) _groq = new Groq({ apiKey: process.env.GROQ_API_KEY! }); return _groq }
 
 export const runtime = 'nodejs'
 
@@ -28,7 +29,7 @@ Keep responses concise but thorough. Use code examples when relevant.`
       ...messages.map((m: Message) => ({ role: m.role, content: m.content })),
     ]
 
-    const stream = await groq.chat.completions.create({
+    const stream = await getGroq().chat.completions.create({
       model: 'llama-3.1-8b-instant',
       messages: chatMessages,
       max_tokens: 300,
