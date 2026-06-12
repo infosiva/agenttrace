@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/traces', label: 'Traces' },
   { href: '/sites', label: 'Monitor' },
+  { href: '/taskflow', label: 'TaskFlow' },
 ];
 
 export default function AppNav() {
