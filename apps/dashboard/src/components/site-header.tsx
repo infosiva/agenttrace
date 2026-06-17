@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Activity, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
@@ -13,8 +13,13 @@ export function SiteHeader() {
       <nav className="container flex h-16 max-w-screen-2xl items-center">
         <div className="mr-4 flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <Activity className="h-6 w-6 text-primary" />
-            <span className="font-bold text-xl">AgentTrace</span>
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg,#0e7490,#22d3ee)', boxShadow: '0 3px 12px rgba(34,211,238,0.3)' }}>
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                <path d="M2 8 L5 5 L8 9 L11 4 L14 8" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <circle cx="14" cy="8" r="1.5" fill="white" opacity="0.9"/>
+              </svg>
+            </div>
+            <span className="font-bold text-xl">Agent<span style={{ color: '#22d3ee' }}>Trace</span></span>
           </Link>
         </div>
 
