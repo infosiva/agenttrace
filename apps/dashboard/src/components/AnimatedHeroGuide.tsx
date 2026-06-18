@@ -73,7 +73,7 @@ export default function AnimatedHeroGuide() {
         }
         .at-card { transition: transform 200ms cubic-bezier(.23,1,.32,1), box-shadow 200ms cubic-bezier(.23,1,.32,1); }
         .at-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(34,197,94,0.12), 0 0 0 1px rgba(34,197,94,0.2); }
-        @media (max-width: 640px) { .at-grid { grid-template-columns: 1fr !important; } .at-steps { flex-direction: column !important; } }
+        @media (max-width: 640px) { .at-grid { grid-template-columns: 1fr !important; } .at-steps { flex-direction: column !important; } .at-hero-grid { grid-template-columns: 1fr !important; gap: 24px !important; } }
       `}</style>
 
       <section style={{ position: 'relative', overflow: 'hidden', background: '#020617', padding: '80px 24px 60px' }}>
@@ -81,7 +81,7 @@ export default function AnimatedHeroGuide() {
         <ScanLine />
         <div style={{ position: 'absolute', top: -100, right: '15%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(34,197,94,0.08) 0%, transparent 70%)', animation: 'at-glow 8s ease-in-out infinite', pointerEvents: 'none' }} />
 
-        <div style={{ position: 'relative', maxWidth: 900, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center', opacity: visible ? 1 : 0, animation: visible ? 'at-fade-up 0.6s ease-out' : 'none' }}>
+        <div className="at-hero-grid" style={{ position: 'relative', maxWidth: 900, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center', opacity: visible ? 1 : 0, animation: visible ? 'at-fade-up 0.6s ease-out' : 'none' }}>
           <div>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: 99, padding: '6px 16px', marginBottom: 24 }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: ACCENT, animation: 'at-blink 1.4s ease-in-out infinite', display: 'inline-block' }} />
