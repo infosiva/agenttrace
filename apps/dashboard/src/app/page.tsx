@@ -71,7 +71,7 @@ function LogStream() {
         className="p-4 h-72 overflow-y-auto space-y-1 font-mono text-xs scrollbar-hide"
       >
         {LOG_LINES.slice(0, visibleLines).map((line, i) => (
-          <div key={i} className="flex gap-3 opacity-90 hover:opacity-100 transition-opacity">
+          <div key={i} className="flex gap-3 opacity-90 hover:opacity-100 transition-opacity min-w-0 overflow-hidden">
             <span className="text-gray-600 shrink-0">{line.time}</span>
             <span className={`shrink-0 w-10 ${
               line.level === 'ERROR' ? 'text-red-400' :
@@ -80,7 +80,7 @@ function LogStream() {
               line.level === 'DONE' ? 'text-green-300' : 'text-green-600'
             }`}>[{line.level}]</span>
             <span className="text-purple-400 shrink-0">{line.agent}</span>
-            <span className={line.color}>{line.msg}</span>
+            <span className={`${line.color} truncate`}>{line.msg}</span>
           </div>
         ))}
         <div className="flex gap-2 animate-pulse">
