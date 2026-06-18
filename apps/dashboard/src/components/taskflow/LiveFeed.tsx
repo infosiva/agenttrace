@@ -25,12 +25,15 @@ export default function LiveFeed() {
   useEffect(() => {
     if (!running) return;
     const interval = setInterval(() => {
-      if (idxRef.current >= BUILD_EVENTS.length) {
+      const idx = idxRef.current;
+      if (idx >= BUILD_EVENTS.length) {
         setRunning(false);
         return;
       }
-      setVisible(prev => [...prev, BUILD_EVENTS[idxRef.current]]);
-      idxRef.current += 1;
+      const ev = BUILD_EVENTS[idx];
+      if (!ev) { setRunning(false); return; }
+      setVisible(prev => [...prev, ev]);
+      idxRef.current = idx + 1;
     }, TICK_MS / speed);
     return () => clearInterval(interval);
   }, [running, speed]);
