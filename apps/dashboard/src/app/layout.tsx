@@ -98,7 +98,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {flags.chatbot && <ChatBot />}
         </Providers>
         <Script defer data-domain="agentlogs.app" src="https://plausible.io/js/script.js" strategy="afterInteractive" />
-        <Script defer data-site="agentlogs.app" src="http://31.97.56.148:3098/t.js" strategy="afterInteractive" />
         <FloatingChatWrapper />
         <FeedbackWidget siteName="AgentTrace" accentColor="#0ea5e9" position="left" />
       </body>

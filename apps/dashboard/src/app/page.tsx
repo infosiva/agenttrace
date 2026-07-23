@@ -198,7 +198,11 @@ export default function HomePage() {
           </Link>
           <div className="hidden md:flex items-center gap-6 text-sm font-mono">
             {['Features', 'Integrations', 'Pricing', 'Docs'].map(item => (
-              <Link key={item} href={`/${item.toLowerCase()}`} className="text-green-700 hover:text-green-400 transition-colors">
+              <Link
+                key={item}
+                href={item === 'Features' ? '#features' : `/${item.toLowerCase()}`}
+                className="text-green-700 hover:text-green-400 transition-colors"
+              >
                 {item}
               </Link>
             ))}
@@ -259,7 +263,7 @@ export default function HomePage() {
         </section>
 
         {/* Features */}
-        <section className="container mx-auto max-w-6xl px-4 py-20">
+        <section id="features" className="container mx-auto max-w-6xl px-4 py-20">
           <div className="text-center mb-12">
             <div className="font-mono text-xs text-green-600 uppercase tracking-widest mb-3">// capabilities</div>
             <h2 className="font-mono font-bold text-3xl md:text-4xl text-white mb-4">
