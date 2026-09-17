@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Check, Github } from 'lucide-react';
 import { useState } from 'react';
+import PromoBar from '@/components/PromoBar';
 
 const FREE = {
   name: 'Free',
@@ -74,6 +75,7 @@ export default function PricingPage() {
         <header className="text-center mb-12">
           <p className="text-xs text-green-600 uppercase tracking-widest mb-2">// pricing</p>
           <h1 className="text-4xl font-bold text-white mb-3">Simple. Honest.</h1>
+          <PromoBar />
           <p className="text-slate-400 max-w-xl mx-auto">
             Free forever for small projects. Pay only when you need scale. Self-host for $0 if you prefer.
           </p>
