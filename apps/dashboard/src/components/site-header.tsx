@@ -33,6 +33,12 @@ export function SiteHeader() {
               Traces
             </Link>
             <Link
+              href="/demo"
+              className="transition-colors hover:text-foreground/80 text-foreground/60"
+            >
+              How it works
+            </Link>
+            <Link
               href="/integrations"
               className="transition-colors hover:text-foreground/80 text-foreground/60"
             >
@@ -93,6 +99,13 @@ export function SiteHeader() {
               onClick={() => setMobileMenuOpen(false)}
             >
               Traces
+            </Link>
+            <Link
+              href="/demo"
+              className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-accent"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              How it works
             </Link>
             <Link
               href="/integrations"

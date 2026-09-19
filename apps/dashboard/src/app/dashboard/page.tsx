@@ -170,12 +170,20 @@ function NoProjectsState() {
           <h1 className="text-2xl font-bold text-white mb-2">Welcome to AgentLogs</h1>
           <p className="text-sm text-slate-400">Create your first project to start tracing AI agents.</p>
         </div>
-        <Link
-          href="/settings"
-          className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black font-bold text-sm px-5 py-2.5 rounded"
-        >
-          Create project →
-        </Link>
+        <div className="flex items-center justify-center gap-3">
+          <Link
+            href="/settings"
+            className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black font-bold text-sm px-5 py-2.5 rounded"
+          >
+            Create project →
+          </Link>
+          <Link
+            href="/demo"
+            className="inline-flex items-center gap-2 border border-slate-700 hover:border-slate-600 text-slate-300 text-sm px-5 py-2.5 rounded"
+          >
+            See how it works
+          </Link>
+        </div>
       </div>
     </main>
   );
@@ -183,11 +191,30 @@ function NoProjectsState() {
 
 function FirstTraceEmptyState() {
   return (
-    <div className="p-12 text-center">
-      <TrendingUp className="w-8 h-8 text-slate-700 mx-auto mb-3" />
-      <p className="text-sm text-slate-400 mb-2">No traces yet.</p>
-      <p className="text-xs text-slate-500 mb-6">Install the SDK and send your first trace.</p>
-      <Link href="/docs" className="text-xs text-green-400 hover:text-green-300 underline">View quickstart →</Link>
+    <div className="p-10">
+      <div className="text-center mb-8">
+        <TrendingUp className="w-8 h-8 text-slate-700 mx-auto mb-3" />
+        <p className="text-sm text-slate-300 mb-1">No traces yet — send your first one.</p>
+        <p className="text-xs text-slate-500">Pick a framework, install, run. Traces show up here live.</p>
+      </div>
+      <div className="grid sm:grid-cols-2 gap-3 max-w-xl mx-auto mb-6">
+        <QuickstartCard lang="python" cmd="pip install agentlogs" snippet={`from agentlogs import wrap_openai\nclient = wrap_openai(OpenAI())`} />
+        <QuickstartCard lang="python" cmd="pip install agentlogs" snippet={`from agentlogs.integrations.langchain import AgentLogsCallback\nchain.invoke(x, config={"callbacks": [AgentLogsCallback()]})`} />
+      </div>
+      <div className="flex items-center justify-center gap-4 text-xs">
+        <Link href="/demo" className="text-cyan-400 hover:text-cyan-300 underline">See it work first →</Link>
+        <Link href="/docs" className="text-green-400 hover:text-green-300 underline">Full quickstart docs →</Link>
+      </div>
+    </div>
+  );
+}
+
+function QuickstartCard({ lang, cmd, snippet }: { lang: string; cmd: string; snippet: string }) {
+  return (
+    <div className="border border-slate-800 rounded-lg bg-black/40 p-4 text-left">
+      <p className="text-[10px] text-slate-600 uppercase tracking-widest mb-2">{lang}</p>
+      <code className="block text-xs text-cyan-400 mb-2">$ {cmd}</code>
+      <pre className="text-[11px] text-slate-400 whitespace-pre-wrap leading-relaxed">{snippet}</pre>
     </div>
   );
 }
