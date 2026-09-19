@@ -41,11 +41,11 @@ function LoginInner() {
 
   return (
     <div className="w-full max-w-md">
-      <div className="flex items-center justify-center gap-2 mb-8">
+      <Link href="/" className="flex items-center justify-center gap-2 mb-8 hover:opacity-80 transition-opacity">
         <Activity className="w-6 h-6 text-green-500" />
         <span className="font-bold text-xl tracking-tight">AgentLogs</span>
         <span className="text-[10px] bg-green-500/10 text-green-400 px-1.5 py-0.5 rounded-full border border-green-500/20 font-semibold uppercase tracking-wider">Beta</span>
-      </div>
+      </Link>
 
       <div className="border border-slate-800 bg-slate-950/60 rounded-lg p-8 backdrop-blur-sm">
         {state === 'sent' ? (
