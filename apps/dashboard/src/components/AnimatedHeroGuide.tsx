@@ -96,7 +96,7 @@ export default function AnimatedHeroGuide() {
             </p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
               <Link href="/dashboard" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 10, background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, color: '#fff', fontWeight: 700, fontSize: 14, textDecoration: 'none', boxShadow: '0 4px 20px rgba(34,197,94,0.3)' }}>View traces →</Link>
-              <Link href="/traces" style={{ display: 'inline-flex', alignItems: 'center', padding: '12px 20px', borderRadius: 10, border: '1px solid rgba(34,197,94,0.25)', color: ACCENT, fontWeight: 600, fontSize: 14, textDecoration: 'none', background: 'rgba(34,197,94,0.05)' }}>Browse examples</Link>
+              <Link href="/traces" style={{ display: 'inline-flex', alignItems: 'center', padding: '12px 20px', borderRadius: 10, border: '1px solid rgba(34,197,94,0.4)', color: '#f8fafc', fontWeight: 600, fontSize: 14, textDecoration: 'none', background: '#0f1e2e' }}>Browse examples</Link>
             </div>
           </div>
 

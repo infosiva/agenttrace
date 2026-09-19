@@ -391,27 +391,26 @@ with client.trace("agent-run") as trace:
             <div className="font-mono text-xs text-green-600 uppercase tracking-widest mb-3">// compare</div>
             <h2 className="font-mono font-bold text-3xl text-white">How we stack up</h2>
           </div>
-          <div className="max-w-3xl mx-auto border border-green-900/50 rounded-lg overflow-x-auto bg-black/60">
-            <table className="w-full font-mono text-sm min-w-[480px]">
+          <div className="max-w-3xl w-full mx-auto border border-green-900/50 rounded-lg overflow-x-auto bg-black/60">
+            <table className="w-full font-mono text-sm min-w-[560px]">
               <thead>
                 <tr className="border-b border-green-900/50 bg-gray-900/60">
                   <th className="px-4 py-3 text-left text-green-600 text-xs uppercase tracking-wider">Feature</th>
                   <th className="px-4 py-3 text-center text-green-400 text-xs uppercase tracking-wider">AgentTrace</th>
                   <th className="px-4 py-3 text-center text-green-800 text-xs uppercase tracking-wider">LangSmith</th>
                   <th className="px-4 py-3 text-center text-green-800 text-xs uppercase tracking-wider">Helicone</th>
-                  <th className="px-4 py-3 text-center text-green-800 text-xs uppercase tracking-wider">Arize</th>
+                  <th className="px-4 py-3 text-center text-green-800 text-xs uppercase tracking-wider">Arize Phoenix</th>
                 </tr>
               </thead>
               <tbody>
                 {[
-                  { feature: 'Agent-Focused', at: true, ls: true, h: false, a: true },
-                  { feature: 'Real-time Trace View', at: true, ls: false, h: false, a: false },
-                  { feature: 'Issue Lifecycle Tracking', at: true, ls: false, h: false, a: false },
-                  { feature: 'Multi-Step Tracing', at: true, ls: true, h: false, a: true },
+                  { feature: 'Full Step-Tree Tracing', at: true, ls: true, h: false, a: true },
+                  { feature: 'Replay / Root-Cause Debug', at: true, ls: false, h: false, a: false },
+                  { feature: 'OTel gen_ai Ingest', at: true, ls: false, h: false, a: true },
                   { feature: 'Cost Analytics', at: true, ls: true, h: true, a: true },
-                  { feature: 'Self-Hosting', at: true, ls: false, h: false, a: false },
-                  { feature: 'Open Source', at: true, ls: false, h: false, a: false },
-                  { feature: 'Starting Price', at: 'Free', ls: '$39/mo', h: 'maintenance', a: '$500+/mo' },
+                  { feature: 'Self-Hosting', at: true, ls: false, h: true, a: true },
+                  { feature: 'Open Source', at: true, ls: false, h: true, a: true },
+                  { feature: 'Starting Price', at: 'Free', ls: '$39/seat/mo', h: '$79/mo', a: 'Free (OSS)' },
                 ].map((row, i) => (
                   <tr key={i} className="border-b border-green-900/30 hover:bg-green-950/10 transition-colors">
                     <td className="px-4 py-3 text-green-600 text-xs">{row.feature}</td>
@@ -429,6 +428,7 @@ with client.trace("agent-run") as trace:
                 ))}
               </tbody>
             </table>
+            <p className="font-mono text-[10px] text-green-900 px-4 py-3">Pricing as of Sept 2026, publicly listed rates.</p>
           </div>
         </section>
 

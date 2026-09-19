@@ -4,7 +4,6 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/providers';
 import ChatBot from '@/components/ChatBot';
-import FloatingChatWrapper from '@/components/FloatingChatWrapper'
 import FeedbackWidget from '@/components/FeedbackWidget';
 import { getSiteFlags } from '@/lib/flags';
 import AppNav from '@/components/AppNav';
@@ -98,7 +97,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {flags.chatbot && <ChatBot />}
         </Providers>
         <Script defer data-domain="agentlogs.app" src="https://plausible.io/js/script.js" strategy="afterInteractive" />
-        <FloatingChatWrapper />
         <FeedbackWidget siteName="AgentTrace" accentColor="#0ea5e9" position="left" />
       </body>
     </html>

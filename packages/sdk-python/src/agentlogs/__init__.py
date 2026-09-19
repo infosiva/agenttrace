@@ -19,3 +19,11 @@ __all__ = [
     "StepType",
     "TraceStatus",
 ]
+
+
+def __getattr__(name: str):
+    # ponytail: lazy import so langchain-core isn't a hard dep for all users
+    if name == "AgentLogsCallbackHandler":
+        from .integrations.langchain import AgentLogsCallbackHandler
+        return AgentLogsCallbackHandler
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

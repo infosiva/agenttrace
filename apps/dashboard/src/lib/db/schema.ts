@@ -114,3 +114,16 @@ export const steps = pgTable('steps', {
 }, t => ({
   traceIdx: index('steps_trace_idx').on(t.traceId),
 }));
+
+export const replays = pgTable('replays', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  stepId: uuid('step_id').notNull().references(() => steps.id, { onDelete: 'cascade' }),
+  traceId: uuid('trace_id').notNull().references(() => traces.id, { onDelete: 'cascade' }),
+  newOutput: jsonb('new_output'),
+  newStatus: text('new_status').notNull(), // success | error
+  newErrorMessage: text('new_error_message'),
+  durationMs: integer('duration_ms'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, t => ({
+  stepIdx: index('replays_step_idx').on(t.stepId),
+}));
