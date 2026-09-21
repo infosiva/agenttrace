@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { db, steps, traces, replays } from '@/lib/db';
 import { bearerToken, resolveApiKey } from '@/lib/api-keys';
+import { API_LIMITER } from '@/lib/rateLimit';
 import { and, eq } from 'drizzle-orm';
 
 export const runtime = 'nodejs';
@@ -12,6 +13,7 @@ export const dynamic = 'force-dynamic';
 // keys) — it's a comparison replay, not a byte-identical rerun. Labeled as such
 // in the response so the UI never implies it hit the original model.
 export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
+  const limited = API_LIMITER.check(req); if (limited) return limited
   const { id: stepId } = await ctx.params;
   const token = bearerToken(req.headers.get('authorization'));
   if (!token) return NextResponse.json({ error: 'missing_api_key' }, { status: 401 });

@@ -1,12 +1,14 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { db, traces, apiKeys } from '@/lib/db';
 import { bearerToken, resolveApiKey } from '@/lib/api-keys';
+import { API_LIMITER } from '@/lib/rateLimit';
 import { eq } from 'drizzle-orm';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
+  const limited = API_LIMITER.check(req); if (limited) return limited
   const token = bearerToken(req.headers.get('authorization'));
   if (!token) return NextResponse.json({ error: 'missing_api_key' }, { status: 401 });
 

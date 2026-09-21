@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { db, traces, steps } from '@/lib/db';
 import { bearerToken, resolveApiKey } from '@/lib/api-keys';
+import { API_LIMITER } from '@/lib/rateLimit';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -12,6 +13,7 @@ export const dynamic = 'force-dynamic';
 // schema.ts: traces.name/status/metadata + steps.type/input/output/tokens
 // already cover everything the semconv defines).
 export async function POST(req: NextRequest) {
+  const limited = API_LIMITER.check(req); if (limited) return limited
   const token = bearerToken(req.headers.get('authorization'));
   if (!token) return NextResponse.json({ error: 'missing_api_key' }, { status: 401 });
 
