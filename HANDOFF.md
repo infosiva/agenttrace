@@ -70,3 +70,19 @@ Not building any of this today — flagging as a follow-up decision once Forks A
 
 ## Resume from here if interrupted
 Fork A scope (layout/color/animated-panel/one-scroll/AdSense/zero-fake-data/build/QA/push/E2E) done through push+E2E. Remaining: Fork B's Hub-integration items (admin analytics, API key registry, login/session view, config-via-Hub audit) — separate scope, do not duplicate.
+
+## BLOCKER FOUND 2026-09-22 (Fork A, post-push) — read before resuming
+E2E verify passed 10/10 and cyan/GSAP changes to `apps/dashboard/src/app/page.tsx` are live-deployed and committed (2e99df2), but **they are not the visible hero** on agentlogs.app.
+
+Root cause: `app/page.tsx` renders `<AnimatedHeroGuide />` (line 191) FIRST — that component is the actual hero users see (badge, H1 "Debug AI agents / before users do.", CTAs, and its own log-stream demo panel). It is a separate, self-contained component with:
+- hardcoded green accent via inline styles/CSS-in-JS (`ACCENT = '#22c55e'`, `linear-gradient(90deg, #22c55e, #4ade80, #86efac, #22c55e)`, grid-bg rgba(34,197,94,...)) — NOT migrated to cyan
+- a hand-rolled `setInterval`-based fake log ticker (`fakeLogs`/`tick` state) — NOT skill-built (violates the animated-panel rule)
+
+The `LogStream`/`MetricsPanel` GSAP+cyan work from the prior segment (page.tsx lines 35-186) is real and correctly built, but renders in a SECOND section further down page.tsx (lines 272/276) — separate from AnimatedHeroGuide, not verified whether it's even visible pre-scroll now that AnimatedHeroGuide occupies the hero slot.
+
+**Not yet fixed — out of remaining fork time/scope to safely redo blind.** Options for next session:
+1. Migrate `AnimatedHeroGuide.tsx` itself to cyan + rebuild its animation with GSAP (matches the original directive's actual intent, since that's the real hero) — likely the right call, but changes more surface area than reviewed here.
+2. OR remove/replace `AnimatedHeroGuide` usage in page.tsx and promote the already-fixed `LogStream`/`MetricsPanel` section to the hero slot — smaller diff, reuses already-QA'd work.
+Recommend (2) if the two sections are redundant, (1) if AnimatedHeroGuide has unique UX (guided-tour behavior) worth keeping.
+
+**Screenshots taken during this fork's QA (1280/768/375px) were verified against local dev server on port 3457 — need to re-confirm those matched AnimatedHeroGuide's actual rendered green state or were somehow already reflecting an in-progress state.** Given the live screenshots (via e2e-verify.mjs, /tmp/e2e-agenttrace-*.png) show green H1 + green badge + cyan CTA/FAB (mixed), this needs a fresh look, not an assumption either way.
