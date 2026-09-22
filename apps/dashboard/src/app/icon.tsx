@@ -17,6 +17,7 @@ export default function Icon() {
         <circle cx="18" cy="6" r="2.5" fill="white" opacity="0.85"/>
         <circle cx="12" cy="18" r="2.5" fill="white"/>
       </svg>
-    </div>
+    </div>,
+    { ...size }
   )
 }
