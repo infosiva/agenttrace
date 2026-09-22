@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard' },
@@ -9,7 +10,12 @@ const NAV_ITEMS = [
   { href: '/taskflow', label: 'TaskFlow' },
 ];
 
+const PUBLIC_ROUTES = ['/', '/demo', '/docs', '/integrations', '/pricing', '/login'];
+
 export default function AppNav() {
+  const pathname = usePathname();
+  if (PUBLIC_ROUTES.includes(pathname)) return null;
+
   return (
     <nav style={{ background: 'rgba(2,6,23,0.97)', borderBottom: '1px solid rgba(51,65,85,0.5)', padding: '0 24px', height: 56, display: 'flex', alignItems: 'center', gap: 24, position: 'sticky', top: 0, zIndex: 50, backdropFilter: 'blur(12px)', overflowX: 'auto', scrollbarWidth: 'none' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginRight: 8, flexShrink: 0 }}>
