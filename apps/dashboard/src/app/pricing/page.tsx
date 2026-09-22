@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Check, Github } from 'lucide-react';
 import { useState } from 'react';
 import PromoBar from '@/components/PromoBar';
+import { PublicHeader } from '@/components/PublicHeader';
 
 const FREE = {
   name: 'Free',
@@ -70,8 +71,9 @@ export default function PricingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#020617] text-slate-100 font-mono py-16 px-4">
-      <div className="container mx-auto max-w-5xl">
+    <main className="min-h-screen bg-[#020617] text-slate-100 font-mono">
+      <PublicHeader />
+      <div className="container mx-auto max-w-5xl py-16 px-4">
         <header className="text-center mb-12">
           <p className="text-xs text-cyan-600 uppercase tracking-widest mb-2">// pricing</p>
           <h1 className="text-4xl font-bold text-white mb-3">Simple. Honest.</h1>

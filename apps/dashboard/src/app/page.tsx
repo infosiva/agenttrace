@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Activity, BarChart3, Clock, DollarSign, Check, Zap, Shield, Code2, TrendingUp, Terminal, AlertCircle, Radio, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { PublicHeader } from '@/components/PublicHeader';
 
 const LOG_LINES = [
   { time: '14:32:01.423', level: 'INFO', agent: 'research-agent', msg: 'Starting task: "Summarize latest AI papers"', color: 'text-cyan-400' },
@@ -191,7 +192,7 @@ export default function HomePage() {
       {showProBanner && (
         <div className="pro-banner fixed top-0 inset-x-0 z-[100] flex items-center justify-center gap-3 bg-cyan-500 text-black font-mono text-sm font-bold py-3 px-4">
           <Check className="w-4 h-4" />
-          Welcome to AgentTrace Pro! Unlimited logs, alerting, and team access are now active.
+          Welcome to AgentLogs Pro! Unlimited logs, alerting, and team access are now active.
         </div>
       )}
 
@@ -202,34 +203,7 @@ export default function HomePage() {
       }} />
 
       {/* Nav */}
-      <header className="sticky top-0 z-50 border-b border-cyan-900/40 bg-black/80 backdrop-blur">
-        <nav className="container mx-auto max-w-6xl flex h-14 items-center px-4">
-          <Link href="/" className="flex items-center gap-2 mr-8">
-            <Terminal className="w-5 h-5 text-cyan-400" />
-            <span className="font-mono font-bold text-cyan-400 tracking-tight">AgentTrace</span>
-            <span className="hidden sm:block font-mono text-xs text-cyan-700 border border-cyan-900 px-1.5 py-0.5 rounded">v2.0</span>
-          </Link>
-          <div className="hidden md:flex items-center gap-6 text-sm font-mono">
-            {['Features', 'Integrations', 'Pricing', 'Docs'].map(item => (
-              <Link
-                key={item}
-                href={item === 'Features' ? '#features' : `/${item.toLowerCase()}`}
-                className="text-cyan-700 hover:text-cyan-400 transition-colors"
-              >
-                {item}
-              </Link>
-            ))}
-          </div>
-          <div className="ml-auto flex items-center gap-3">
-            <Link href="/login" className="font-mono text-sm text-cyan-700 hover:text-cyan-400 transition-colors hidden sm:block">
-              Sign in
-            </Link>
-            <Link href="/dashboard" className="font-mono text-sm bg-cyan-500/10 border border-cyan-600/50 text-cyan-400 hover:bg-cyan-500/20 px-3 py-1.5 rounded transition-colors">
-              Dashboard →
-            </Link>
-          </div>
-        </nav>
-      </header>
+      <PublicHeader />
 
       <main className="relative">
         {/* Hero */}
@@ -315,11 +289,11 @@ export default function HomePage() {
           </div>
           <div className="max-w-2xl mx-auto space-y-4">
             {[
-              { step: '01', label: 'Install SDK', code: 'pip install agenttrace-sdk' },
-              { step: '02', label: 'Set endpoint', code: 'export AGENTTRACE_API_URL="https://agentlogs.app"\nexport AGENTTRACE_PROJECT="my-agent"' },
-              { step: '03', label: 'Instrument', code: `from agenttrace import AgentTrace
+              { step: '01', label: 'Install SDK', code: 'pip install agentlogs-sdk' },
+              { step: '02', label: 'Set endpoint', code: 'export AGENTLOGS_API_KEY="your-key"\nexport AGENTLOGS_PROJECT="my-agent"' },
+              { step: '03', label: 'Instrument', code: `from agentlogs import AgentLogs
 
-client = AgentTrace()
+client = AgentLogs()
 with client.trace("agent-run") as trace:
     trace.step("llm_call", metadata={"model": "gpt-4o", "tokens": 1200})
     # your agent logic
@@ -409,7 +383,7 @@ with client.trace("agent-run") as trace:
               <thead>
                 <tr className="border-b border-cyan-900/50 bg-gray-900/60">
                   <th className="px-4 py-3 text-left text-cyan-600 text-xs uppercase tracking-wider">Feature</th>
-                  <th className="px-4 py-3 text-center text-cyan-400 text-xs uppercase tracking-wider">AgentTrace</th>
+                  <th className="px-4 py-3 text-center text-cyan-400 text-xs uppercase tracking-wider">AgentLogs</th>
                   <th className="px-4 py-3 text-center text-cyan-800 text-xs uppercase tracking-wider">LangSmith</th>
                   <th className="px-4 py-3 text-center text-cyan-800 text-xs uppercase tracking-wider">Helicone</th>
                   <th className="px-4 py-3 text-center text-cyan-800 text-xs uppercase tracking-wider">Arize Phoenix</th>
@@ -475,7 +449,7 @@ with client.trace("agent-run") as trace:
         <div className="container mx-auto max-w-6xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Terminal className="w-4 h-4 text-cyan-700" />
-            <span className="font-mono text-xs text-cyan-800">AgentTrace © 2025 — agentlogs.app</span>
+            <span className="font-mono text-xs text-cyan-800">AgentLogs © 2025 — agentlogs.app</span>
           </div>
           <div className="flex items-center gap-6 font-mono text-xs text-cyan-800">
             <Link href="/pricing" className="hover:text-cyan-600 transition-colors">Pricing</Link>

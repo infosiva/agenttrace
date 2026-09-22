@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Terminal, Key, FileCode2, Webhook, Box } from 'lucide-react';
+import { PublicHeader } from '@/components/PublicHeader';
 
 export const metadata = {
   title: 'AgentLogs Docs — Trace AI agents in 3 lines',
@@ -45,6 +46,7 @@ const CURL_TRACE = `curl -X POST https://agentlogs.app/api/v1/traces \\
 export default function DocsPage() {
   return (
     <main className="min-h-screen bg-[#020617] text-slate-100 font-mono">
+      <PublicHeader />
       <div className="container mx-auto max-w-4xl px-4 py-12">
         <header className="mb-10">
           <p className="text-xs text-cyan-600 uppercase tracking-widest mb-2">// docs</p>

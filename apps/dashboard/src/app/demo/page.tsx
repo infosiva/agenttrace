@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Check } from 'lucide-react';
+import { PublicHeader } from '@/components/PublicHeader';
 
 const ACCENT = '#22d3ee';
 const ACCENT2 = '#67e8f9';
@@ -90,6 +91,7 @@ export default function DemoPage() {
 
   return (
     <main style={{ minHeight: '100vh', background: '#020617', color: '#f8fafc', fontFamily: 'monospace' }}>
+      <PublicHeader />
       <style>{`
         @keyframes demo-fade { from { opacity:0; transform:translateY(20px);} to { opacity:1; transform:translateY(0);} }
         @keyframes demo-blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
@@ -109,7 +111,7 @@ export default function DemoPage() {
           Wrap your agent. Get the full trace tree. Fix it in minutes.
         </h1>
         <p style={{ fontSize: 15, color: 'rgba(248,250,252,0.55)', maxWidth: 560, marginInline: 'auto', lineHeight: 1.7 }}>
-          No manual instrumentation, no separate spans to write. AgentTrace hooks into your client or callback once —
+          No manual instrumentation, no separate spans to write. AgentLogs hooks into your client or callback once —
           every LLM call, tool call, and step after that is captured and replayable.
         </p>
       </section>

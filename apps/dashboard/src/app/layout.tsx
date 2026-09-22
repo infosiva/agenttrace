@@ -14,26 +14,26 @@ const jetbrains = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono', 
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://agentlogs.app'),
-  title: 'AgentTrace — AI Agent Observability & Monitoring Platform',
+  title: 'AgentLogs — AI Agent Observability & Monitoring Platform',
   description: 'Trace, debug, and monitor AI agents in production. Complete observability for LLM calls, tool use, errors, and costs. Real-time agent monitoring platform.',
   keywords: ['AI agent monitoring', 'LLM observability', 'agent debugging', 'AI tracing', 'agent logs'],
-  authors: [{ name: 'AgentTrace' }],
+  authors: [{ name: 'AgentLogs' }],
   openGraph: {
-    title: 'AgentTrace — Monitor Your AI Agents',
+    title: 'AgentLogs — Monitor Your AI Agents',
     description: 'Complete observability for production AI agents. Debug LLM calls, optimize costs, track errors.',
     url: 'https://agentlogs.app',
-    siteName: 'AgentTrace',
+    siteName: 'AgentLogs',
     type: 'website',
     images: [{
       url: 'https://agentlogs.app/og-image.png',
       width: 1200,
       height: 630,
-      alt: 'AgentTrace - AI Agent Monitoring Platform'
+      alt: 'AgentLogs - AI Agent Monitoring Platform'
     }]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AgentTrace — Monitor Your AI Agents',
+    title: 'AgentLogs — Monitor Your AI Agents',
     description: 'Complete observability for production AI agents'
   },
   robots: 'index, follow'
@@ -48,7 +48,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
-          "name": "AgentTrace",
+          "name": "AgentLogs",
           "description": "AI Agent Observability Platform",
           "url": "https://agentlogs.app",
           "applicationCategory": "DeveloperApplication",
@@ -98,7 +98,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {flags.chatbot && <ChatBot />}
         </Providers>
         <Script defer data-domain="agentlogs.app" src="https://plausible.io/js/script.js" strategy="afterInteractive" />
-        <FeedbackWidget siteName="AgentTrace" accentColor="#0ea5e9" position="left" />
+        <FeedbackWidget siteName="AgentLogs" accentColor="#0ea5e9" position="left" />
         <Analytics />
       </body>
     </html>

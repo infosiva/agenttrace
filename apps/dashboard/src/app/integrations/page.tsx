@@ -1,5 +1,6 @@
 import { Check, ExternalLink, Code } from 'lucide-react';
 import Link from 'next/link';
+import { PublicHeader } from '@/components/PublicHeader';
 
 interface Integration {
   name: string;
@@ -81,8 +82,9 @@ const statusStyles: Record<Integration['status'], string> = {
 
 export default function IntegrationsPage() {
   return (
-    <main className="min-h-screen bg-[#020617] text-slate-100 font-mono py-16 px-4">
-      <div className="max-w-6xl mx-auto">
+    <main className="min-h-screen bg-[#020617] text-slate-100 font-mono">
+      <PublicHeader />
+      <div className="max-w-6xl mx-auto py-16 px-4">
         <div className="text-center mb-14">
           <h1 className="text-4xl font-bold text-white mb-3">Integrations</h1>
           <p className="text-slate-400 max-w-xl mx-auto">
