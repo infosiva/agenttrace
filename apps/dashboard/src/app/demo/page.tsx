@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Check } from 'lucide-react';
 
-const ACCENT = '#22c55e';
-const ACCENT2 = '#4ade80';
+const ACCENT = '#22d3ee';
+const ACCENT2 = '#67e8f9';
 
 type FrameworkId = 'openai' | 'langchain' | 'raw';
 

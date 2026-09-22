@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { usePromo } from '@/hooks/usePromo'
 
-export default function PromoBar({ accentColor = '#22c55e' }: { accentColor?: string }) {
+export default function PromoBar({ accentColor = '#22d3ee' }: { accentColor?: string }) {
   const { isUnlocked, daysLeft } = usePromo()
   const [open, setOpen] = useState(false)
   const [code, setCode] = useState('')

@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 
-const ACCENT = '#22c55e'
-const ACCENT2 = '#16a34a'
+const ACCENT = '#22d3ee'
+const ACCENT2 = '#06b6d4'
 const BOT_NAME = 'TraceBot'
 const WELCOME = "I'm TraceBot. Paste a trace ID or describe a pipeline issue — I'll help you debug it. Works with any agent framework."
 const SYSTEM_PROMPT = `You are TraceBot, the AI assistant for AgentTrace — a framework-agnostic AI agent observability platform.

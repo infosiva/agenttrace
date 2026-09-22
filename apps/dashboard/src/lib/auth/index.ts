@@ -35,9 +35,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           subject: 'Sign in to AgentLogs',
           html: `
             <div style="font-family:ui-monospace,monospace;background:#020617;color:#e2e8f0;padding:32px;border-radius:12px;max-width:480px;margin:0 auto">
-              <h1 style="color:#22c55e;font-size:20px;margin:0 0 16px">AgentLogs</h1>
+              <h1 style="color:#22d3ee;font-size:20px;margin:0 0 16px">AgentLogs</h1>
               <p>Click below to sign in.</p>
-              <a href="${url}" style="display:inline-block;background:#22c55e;color:#020617;padding:12px 20px;border-radius:6px;text-decoration:none;font-weight:700;margin-top:16px">Sign in →</a>
+              <a href="${url}" style="display:inline-block;background:#22d3ee;color:#020617;padding:12px 20px;border-radius:6px;text-decoration:none;font-weight:700;margin-top:16px">Sign in →</a>
               <p style="color:#64748b;font-size:12px;margin-top:24px">If you didn't request this, ignore the email.</p>
             </div>
           `,
