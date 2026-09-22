@@ -47,7 +47,7 @@ export default function DocsPage() {
     <main className="min-h-screen bg-[#020617] text-slate-100 font-mono">
       <div className="container mx-auto max-w-4xl px-4 py-12">
         <header className="mb-10">
-          <p className="text-xs text-green-600 uppercase tracking-widest mb-2">// docs</p>
+          <p className="text-xs text-cyan-600 uppercase tracking-widest mb-2">// docs</p>
           <h1 className="text-4xl font-bold text-white mb-3">Get started in 60 seconds</h1>
           <p className="text-slate-400">
             Install the SDK, drop your API key, send a trace. View it in the dashboard.
@@ -68,8 +68,8 @@ export default function DocsPage() {
 
         <Section id="api-key" title="2. Get your API key">
           <ol className="text-sm text-slate-300 space-y-2 mb-4">
-            <li>1. <Link href="/login" className="text-green-400 hover:text-green-300 underline">Sign in</Link> with email (magic link).</li>
-            <li>2. Go to <Link href="/settings" className="text-green-400 hover:text-green-300 underline">Settings → Projects</Link>.</li>
+            <li>1. <Link href="/login" className="text-cyan-400 hover:text-cyan-300 underline">Sign in</Link> with email (magic link).</li>
+            <li>2. Go to <Link href="/settings" className="text-cyan-400 hover:text-cyan-300 underline">Settings → Projects</Link>.</li>
             <li>3. Create a project + an API key. Copy the key (you&apos;ll only see it once).</li>
           </ol>
           <p className="text-sm text-slate-400 mb-3">Then set it in your environment:</p>
@@ -79,7 +79,7 @@ export default function DocsPage() {
         <Section id="first-trace" title="3. Send your first trace">
           <CodeBlock code={QUICKSTART_PY} language="python" />
           <p className="text-sm text-slate-400 mt-4">
-            Open the <Link href="/dashboard" className="text-green-400 hover:text-green-300 underline">dashboard</Link> — your trace appears within seconds.
+            Open the <Link href="/dashboard" className="text-cyan-400 hover:text-cyan-300 underline">dashboard</Link> — your trace appears within seconds.
           </p>
         </Section>
 
@@ -153,7 +153,7 @@ export default function DocsPage() {
           />
           <p className="text-sm text-slate-400 mt-4">
             Source code:{' '}
-            <a href="https://github.com/infosiva/agenttrace" className="text-green-400 hover:text-green-300 underline" target="_blank" rel="noopener noreferrer">
+            <a href="https://github.com/infosiva/agenttrace" className="text-cyan-400 hover:text-cyan-300 underline" target="_blank" rel="noopener noreferrer">
               github.com/infosiva/agenttrace
             </a>
           </p>
@@ -165,7 +165,7 @@ export default function DocsPage() {
             href="https://github.com/infosiva/agenttrace/issues"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm text-green-400 hover:text-green-300 underline"
+            className="inline-flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300 underline"
           >
             <Terminal className="w-4 h-4" /> GitHub issues
           </a>
@@ -179,10 +179,10 @@ function DocCard({ href, icon: Icon, title, desc }: { href: string; icon: typeof
   return (
     <a
       href={href}
-      className="block border border-slate-800 bg-slate-950/60 rounded-lg p-4 hover:border-green-500/40 hover:bg-green-500/5 transition"
+      className="block border border-slate-800 bg-slate-950/60 rounded-lg p-4 hover:border-cyan-500/40 hover:bg-cyan-500/5 transition"
     >
       <div className="flex items-center gap-3 mb-2">
-        <Icon className="w-5 h-5 text-green-400" />
+        <Icon className="w-5 h-5 text-cyan-400" />
         <h3 className="font-bold text-sm text-white">{title}</h3>
       </div>
       <p className="text-xs text-slate-400">{desc}</p>
@@ -206,14 +206,14 @@ function CodeBlock({ code, language }: { code: string; language: string }) {
         <span className="text-xs text-slate-500 uppercase tracking-widest">{language}</span>
       </div>
       <pre className="p-4 overflow-x-auto max-w-full">
-        <code className="text-xs text-green-300 whitespace-pre">{code}</code>
+        <code className="text-xs text-cyan-300 whitespace-pre">{code}</code>
       </pre>
     </div>
   );
 }
 
 function EndpointBlock({ method, path, desc, body }: { method: string; path: string; desc: string; body: string }) {
-  const methodColor = method === 'POST' ? 'text-green-400 bg-green-500/10 border-green-500/30' :
+  const methodColor = method === 'POST' ? 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30' :
                        method === 'PATCH' ? 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30' :
                        'text-slate-300 bg-slate-700/30 border-slate-700';
   return (
@@ -224,7 +224,7 @@ function EndpointBlock({ method, path, desc, body }: { method: string; path: str
       </div>
       <p className="text-xs text-slate-400 px-4 pt-3">{desc}</p>
       <pre className="p-4 overflow-x-auto max-w-full">
-        <code className="text-xs text-green-300 whitespace-pre">{body}</code>
+        <code className="text-xs text-cyan-300 whitespace-pre">{body}</code>
       </pre>
     </div>
   );

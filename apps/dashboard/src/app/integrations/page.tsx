@@ -75,7 +75,7 @@ const integrations: Integration[] = [
 ];
 
 const statusStyles: Record<Integration['status'], string> = {
-  Available: 'bg-green-500/10 text-green-400 border border-green-500/30',
+  Available: 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30',
   'Coming Soon': 'bg-slate-800 text-slate-400 border border-slate-700',
 };
 
@@ -135,7 +135,7 @@ function IntegrationCard({ integration }: { integration: Integration }) {
       <ul className="space-y-1.5 mb-4">
         {integration.features.map((feature) => (
           <li key={feature} className="flex items-center gap-2 text-xs text-slate-300">
-            <Check className="h-3.5 w-3.5 text-green-500 flex-shrink-0" />
+            <Check className="h-3.5 w-3.5 text-cyan-500 flex-shrink-0" />
             {feature}
           </li>
         ))}

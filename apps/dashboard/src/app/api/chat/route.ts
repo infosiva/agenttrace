@@ -21,7 +21,7 @@ Keep responses concise but thorough. Use code examples when relevant.
 ${SCOPE_LINE}`
 
 export async function POST(req: NextRequest) {
-  const limited = CHATBOT_LIMITER.check(req); if (limited) return limited
+  const limited = await CHATBOT_LIMITER.check(req); if (limited) return limited
   try {
     const body = await req.json()
     const messages: Message[] = body.messages

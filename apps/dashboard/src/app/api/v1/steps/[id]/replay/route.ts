@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 // keys) — it's a comparison replay, not a byte-identical rerun. Labeled as such
 // in the response so the UI never implies it hit the original model.
 export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
-  const limited = API_LIMITER.check(req); if (limited) return limited
+  const limited = await API_LIMITER.check(req); if (limited) return limited
   const { id: stepId } = await ctx.params;
   const token = bearerToken(req.headers.get('authorization'));
   if (!token) return NextResponse.json({ error: 'missing_api_key' }, { status: 401 });

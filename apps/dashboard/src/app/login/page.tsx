@@ -42,21 +42,21 @@ function LoginInner() {
   return (
     <div className="w-full max-w-md">
       <Link href="/" className="flex items-center justify-center gap-2 mb-8 hover:opacity-80 transition-opacity">
-        <Activity className="w-6 h-6 text-green-500" />
+        <Activity className="w-6 h-6 text-cyan-500" />
         <span className="font-bold text-xl tracking-tight">AgentLogs</span>
-        <span className="text-[10px] bg-green-500/10 text-green-400 px-1.5 py-0.5 rounded-full border border-green-500/20 font-semibold uppercase tracking-wider">Beta</span>
+        <span className="text-[10px] bg-cyan-500/10 text-cyan-400 px-1.5 py-0.5 rounded-full border border-cyan-500/20 font-semibold uppercase tracking-wider">Beta</span>
       </Link>
 
       <div className="border border-slate-800 bg-slate-950/60 rounded-lg p-8 backdrop-blur-sm">
         {state === 'sent' ? (
           <div className="text-center space-y-4">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-500/10 border border-green-500/30">
-              <CheckCircle2 className="w-6 h-6 text-green-400" />
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-500/30">
+              <CheckCircle2 className="w-6 h-6 text-cyan-400" />
             </div>
             <h1 className="text-xl font-bold text-white">Check your email</h1>
             <p className="text-sm text-slate-400">
               We sent a sign-in link to{' '}
-              <span className="text-green-400">{email || 'your inbox'}</span>.
+              <span className="text-cyan-400">{email || 'your inbox'}</span>.
               Click it to continue.
             </p>
             <p className="text-xs text-slate-500 pt-2">
@@ -67,7 +67,7 @@ function LoginInner() {
                   setState('idle');
                   setEmail('');
                 }}
-                className="text-green-400 hover:text-green-300 underline"
+                className="text-cyan-400 hover:text-cyan-300 underline"
               >
                 Try again
               </button>
@@ -95,7 +95,7 @@ function LoginInner() {
                     autoFocus
                     value={email}
                     onChange={e => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 bg-black/40 border border-slate-700 rounded-md text-sm text-white placeholder-slate-600 focus:border-green-500/60 focus:outline-none focus:ring-1 focus:ring-green-500/30"
+                    className="w-full pl-10 pr-4 py-2.5 bg-black/40 border border-slate-700 rounded-md text-sm text-white placeholder-slate-600 focus:border-cyan-500/60 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
                     placeholder="you@company.com"
                   />
                 </div>
@@ -104,7 +104,7 @@ function LoginInner() {
               <button
                 type="submit"
                 disabled={state === 'sending' || !email}
-                className="w-full inline-flex items-center justify-center gap-2 bg-green-500 hover:bg-green-400 disabled:bg-slate-700 disabled:text-slate-500 text-black font-bold text-sm py-2.5 rounded-md transition"
+                className="w-full inline-flex items-center justify-center gap-2 bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-700 disabled:text-slate-500 text-black font-bold text-sm py-2.5 rounded-md transition"
               >
                 {state === 'sending' ? (
                   <>
@@ -128,9 +128,9 @@ function LoginInner() {
 
       <p className="text-xs text-slate-500 text-center mt-6">
         By signing in, you agree to our{' '}
-        <Link href="/terms" className="text-slate-400 hover:text-green-400 underline">Terms</Link>
+        <Link href="/terms" className="text-slate-400 hover:text-cyan-400 underline">Terms</Link>
         {' '}and{' '}
-        <Link href="/privacy" className="text-slate-400 hover:text-green-400 underline">Privacy</Link>
+        <Link href="/privacy" className="text-slate-400 hover:text-cyan-400 underline">Privacy</Link>
         .
       </p>
     </div>

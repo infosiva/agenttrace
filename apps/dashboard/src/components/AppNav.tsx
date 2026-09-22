@@ -7,7 +7,6 @@ const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/traces', label: 'Traces' },
   { href: '/sites', label: 'Monitor' },
-  { href: '/taskflow', label: 'TaskFlow' },
 ];
 
 const PUBLIC_ROUTES = ['/', '/demo', '/docs', '/integrations', '/pricing', '/login'];

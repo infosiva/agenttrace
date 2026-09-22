@@ -7,7 +7,7 @@ const TRACKER_API = process.env.TRACKER_API_URL || 'http://31.97.56.148:3098';
 const STATS_KEY = process.env.TRACKER_STATS_KEY;
 
 export async function GET(req: NextRequest) {
-  const limited = AI_LIMITER.check(req); if (limited) return limited
+  const limited = await AI_LIMITER.check(req); if (limited) return limited
   if (!STATS_KEY) return NextResponse.json({ ok: false, error: 'tracker not configured' }, { status: 503 });
   const site = new URL(req.url).searchParams.get('site');
   if (!site) return NextResponse.json({ ok: false, error: 'site required' }, { status: 400 });

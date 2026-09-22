@@ -22,7 +22,7 @@ export default async function TracesPage({ searchParams }: { searchParams: Promi
       <main className="min-h-screen bg-[#020617] text-slate-100 font-mono flex items-center justify-center p-8">
         <div className="text-center">
           <p className="text-slate-400 mb-4">No projects yet.</p>
-          <Link href="/settings" className="text-green-400 hover:text-green-300 underline">Create one →</Link>
+          <Link href="/settings" className="text-cyan-400 hover:text-cyan-300 underline">Create one →</Link>
         </div>
       </main>
     );
@@ -49,10 +49,10 @@ export default async function TracesPage({ searchParams }: { searchParams: Promi
     <main className="min-h-screen bg-[#020617] text-slate-100 font-mono py-8 px-4">
       <div className="container mx-auto max-w-6xl">
         <header className="mb-6">
-          <p className="text-xs text-green-600 uppercase tracking-widest mb-2">// traces</p>
+          <p className="text-xs text-cyan-600 uppercase tracking-widest mb-2">// traces</p>
           <h1 className="text-3xl font-bold text-white">Trace explorer</h1>
           <p className="text-sm text-slate-400 mt-1">
-            Project: <span className="text-green-400">{activeProject.name}</span>
+            Project: <span className="text-cyan-400">{activeProject.name}</span>
           </p>
         </header>
 
@@ -60,7 +60,7 @@ export default async function TracesPage({ searchParams }: { searchParams: Promi
           {rows.length === 0 ? (
             <div className="p-12 text-center">
               <p className="text-sm text-slate-400 mb-4">No traces in this project yet.</p>
-              <Link href="/docs" className="text-xs text-green-400 hover:text-green-300 underline">Install the SDK →</Link>
+              <Link href="/docs" className="text-xs text-cyan-400 hover:text-cyan-300 underline">Install the SDK →</Link>
             </div>
           ) : (
             <table className="w-full text-sm">
@@ -83,8 +83,8 @@ export default async function TracesPage({ searchParams }: { searchParams: Promi
                       <span className="flex items-center gap-2">
                         {r.name}
                         {isLive && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-green-400 bg-green-500/10 border border-green-500/30 px-1.5 py-0.5 rounded">
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-1.5 py-0.5 rounded">
+                            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
                             LIVE
                           </span>
                         )}
@@ -92,7 +92,7 @@ export default async function TracesPage({ searchParams }: { searchParams: Promi
                     </td>
                     <td className="px-4 py-3">
                       <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded border ${
-                        r.status === 'success' ? 'bg-green-500/10 text-green-400 border-green-500/30' :
+                        r.status === 'success' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30' :
                         r.status === 'error' ? 'bg-red-500/10 text-red-400 border-red-500/30' :
                         'bg-cyan-500/10 text-cyan-400 border-cyan-500/30'
                       }`}>{r.status}</span>

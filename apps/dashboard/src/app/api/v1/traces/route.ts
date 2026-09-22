@@ -8,7 +8,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
-  const limited = API_LIMITER.check(req); if (limited) return limited
+  const limited = await API_LIMITER.check(req); if (limited) return limited
   const token = bearerToken(req.headers.get('authorization'));
   if (!token) return NextResponse.json({ error: 'missing_api_key' }, { status: 401 });
 

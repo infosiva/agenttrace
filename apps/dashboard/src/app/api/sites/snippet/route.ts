@@ -3,7 +3,7 @@ import { SITES } from '@/lib/sites-registry';
 import { API_LIMITER } from '@/lib/rateLimit';
 
 export async function GET(req: NextRequest) {
-  const limited = API_LIMITER.check(req); if (limited) return limited
+  const limited = await API_LIMITER.check(req); if (limited) return limited
   const slug = new URL(req.url).searchParams.get('site');
   const site = SITES.find(s => s.slug === slug);
   if (!site) return NextResponse.json({ ok: false, error: 'site not found' }, { status: 404 });

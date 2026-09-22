@@ -56,10 +56,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       <div className="container mx-auto max-w-6xl">
         <header className="mb-8 flex items-center justify-between flex-wrap gap-4">
           <div>
-            <p className="text-xs text-green-600 uppercase tracking-widest mb-2">// project: {activeProject.slug}</p>
+            <p className="text-xs text-cyan-600 uppercase tracking-widest mb-2">// project: {activeProject.slug}</p>
             <h1 className="text-3xl font-bold text-white">{activeProject.name}</h1>
             <p className="text-sm text-slate-400 mt-1">
-              Logged in as <span className="text-green-400">{session.user.email}</span>
+              Logged in as <span className="text-cyan-400">{session.user.email}</span>
             </p>
           </div>
           {userProjects.length > 1 && (
@@ -76,10 +76,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         </header>
 
         <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <Metric icon={Activity} label="Total traces" value={stats.total.toLocaleString()} accent="text-green-400" />
+          <Metric icon={Activity} label="Total traces" value={stats.total.toLocaleString()} accent="text-cyan-400" />
           <Metric icon={Clock} label="Avg duration" value={stats.avgDuration ? `${Math.round(stats.avgDuration)}ms` : '—'} accent="text-cyan-400" />
           <Metric icon={DollarSign} label="Total cost" value={stats.totalCost ? `$${stats.totalCost.toFixed(3)}` : '$0'} accent="text-yellow-400" />
-          <Metric icon={AlertCircle} label="Error rate" value={`${errorRate}%`} accent={stats.errors > 0 ? 'text-red-400' : 'text-green-400'} />
+          <Metric icon={AlertCircle} label="Error rate" value={`${errorRate}%`} accent={stats.errors > 0 ? 'text-red-400' : 'text-cyan-400'} />
         </section>
 
         <IssueInbox projectId={activeProject.id} />
@@ -87,7 +87,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <section className="border border-slate-800 rounded-lg bg-slate-950/60 overflow-hidden mt-6">
           <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
             <h2 className="text-sm font-bold text-white uppercase tracking-widest">Recent traces</h2>
-            <Link href="/traces" className="text-xs text-green-400 hover:text-green-300">View all →</Link>
+            <Link href="/traces" className="text-xs text-cyan-400 hover:text-cyan-300">View all →</Link>
           </div>
           {recent.length === 0 ? (
             <FirstTraceEmptyState />
@@ -137,7 +137,7 @@ function Metric({ icon: Icon, label, value, accent }: { icon: typeof Activity; l
 
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
-    success: 'bg-green-500/10 text-green-400 border-green-500/30',
+    success: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30',
     error: 'bg-red-500/10 text-red-400 border-red-500/30',
     running: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30',
   };
@@ -163,8 +163,8 @@ function NoProjectsState() {
   return (
     <main className="min-h-screen bg-[#020617] text-slate-100 font-mono flex items-center justify-center p-8">
       <div className="max-w-md text-center space-y-6">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/10 border border-green-500/30">
-          <FolderPlus className="w-8 h-8 text-green-400" />
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-cyan-500/10 border border-cyan-500/30">
+          <FolderPlus className="w-8 h-8 text-cyan-400" />
         </div>
         <div>
           <h1 className="text-2xl font-bold text-white mb-2">Welcome to AgentLogs</h1>
@@ -173,7 +173,7 @@ function NoProjectsState() {
         <div className="flex items-center justify-center gap-3">
           <Link
             href="/settings"
-            className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black font-bold text-sm px-5 py-2.5 rounded"
+            className="inline-flex items-center gap-2 bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-sm px-5 py-2.5 rounded"
           >
             Create project →
           </Link>
@@ -203,7 +203,7 @@ function FirstTraceEmptyState() {
       </div>
       <div className="flex items-center justify-center gap-4 text-xs">
         <Link href="/demo" className="text-cyan-400 hover:text-cyan-300 underline">See it work first →</Link>
-        <Link href="/docs" className="text-green-400 hover:text-green-300 underline">Full quickstart docs →</Link>
+        <Link href="/docs" className="text-cyan-400 hover:text-cyan-300 underline">Full quickstart docs →</Link>
       </div>
     </div>
   );

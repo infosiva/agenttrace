@@ -62,7 +62,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <style dangerouslySetInnerHTML={{ __html: `
           :root {
             --theme-primary: #00e5ff;
-            --theme-secondary: #39ff14;
+            --theme-secondary: #22d3ee;
             --theme-base: #050a0f;
             --background: #050a0f;
             --surface-1: #0a1520;
@@ -76,7 +76,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             --surface: #0a1520;
             --border: rgba(0,229,255,0.12);
             --text: #e0f7fa;
-            --accent: #39ff14;
+            --accent: #22d3ee;
             --accent-dim: rgba(57,255,20,0.08);
             --blue: #00e5ff;
           }

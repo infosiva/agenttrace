@@ -55,7 +55,7 @@ export function SettingsClient({ initialProjects }: { initialProjects: Project[]
               onClick={() => setActiveProjectId(p.id)}
               className={`w-full text-left px-3 py-2 rounded text-sm transition ${
                 activeProjectId === p.id
-                  ? 'bg-green-500/10 text-green-300 border border-green-500/30'
+                  ? 'bg-cyan-500/10 text-cyan-300 border border-cyan-500/30'
                   : 'text-slate-300 hover:bg-slate-900'
               }`}
             >
@@ -69,12 +69,12 @@ export function SettingsClient({ initialProjects }: { initialProjects: Project[]
             onChange={e => setNewProjectName(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && createProject()}
             placeholder="New project name"
-            className="w-full bg-black/40 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-green-500/60"
+            className="w-full bg-black/40 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-cyan-500/60"
           />
           <button
             onClick={createProject}
             disabled={creatingProject || !newProjectName.trim()}
-            className="w-full inline-flex items-center justify-center gap-2 bg-green-500 hover:bg-green-400 disabled:bg-slate-800 disabled:text-slate-500 text-black font-semibold text-xs py-2 rounded"
+            className="w-full inline-flex items-center justify-center gap-2 bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-800 disabled:text-slate-500 text-black font-semibold text-xs py-2 rounded"
           >
             {creatingProject ? <Loader2 className="w-3 h-3 animate-spin" /> : <FolderPlus className="w-3 h-3" />}
             Create project
@@ -156,7 +156,7 @@ function KeysPanel({ projectId }: { projectId: string }) {
         <button
           onClick={createKey}
           disabled={creating}
-          className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-400 disabled:bg-slate-700 text-black font-semibold text-xs px-3 py-2 rounded"
+          className="inline-flex items-center gap-2 bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-700 text-black font-semibold text-xs px-3 py-2 rounded"
         >
           {creating ? <Loader2 className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
           New key
@@ -164,22 +164,22 @@ function KeysPanel({ projectId }: { projectId: string }) {
       </div>
 
       {revealed && (
-        <div className="border border-green-500/40 bg-green-950/20 rounded-lg p-4">
-          <p className="text-xs text-green-400 font-bold uppercase tracking-widest mb-2">
+        <div className="border border-cyan-500/40 bg-cyan-950/20 rounded-lg p-4">
+          <p className="text-xs text-cyan-400 font-bold uppercase tracking-widest mb-2">
             Save this key now — it won&apos;t be shown again
           </p>
           <div className="flex items-center gap-2 bg-black/60 border border-slate-800 rounded px-3 py-2">
-            <code className="flex-1 text-xs text-green-300 break-all">{revealed.key}</code>
+            <code className="flex-1 text-xs text-cyan-300 break-all">{revealed.key}</code>
             <button
               onClick={() => copy(revealed.key)}
-              className="inline-flex items-center gap-1 text-xs text-slate-300 hover:text-green-300"
+              className="inline-flex items-center gap-1 text-xs text-slate-300 hover:text-cyan-300"
             >
               {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
               {copied ? 'Copied' : 'Copy'}
             </button>
           </div>
           <p className="text-xs text-slate-500 mt-2">
-            Set as <code className="text-green-400">AGENTLOGS_API_KEY</code> in your environment.
+            Set as <code className="text-cyan-400">AGENTLOGS_API_KEY</code> in your environment.
           </p>
         </div>
       )}
@@ -210,7 +210,7 @@ function KeysPanel({ projectId }: { projectId: string }) {
               {keys.map(k => (
                 <tr key={k.id} className="border-b border-slate-900 last:border-0">
                   <td className="px-4 py-3 text-slate-200">{k.name}</td>
-                  <td className="px-4 py-3 text-green-400 font-mono text-xs">{k.keyPrefix}…</td>
+                  <td className="px-4 py-3 text-cyan-400 font-mono text-xs">{k.keyPrefix}…</td>
                   <td className="px-4 py-3 text-slate-500 text-xs">
                     {k.lastUsedAt ? new Date(k.lastUsedAt).toLocaleString() : '—'}
                   </td>

@@ -73,7 +73,7 @@ export default function PricingPage() {
     <main className="min-h-screen bg-[#020617] text-slate-100 font-mono py-16 px-4">
       <div className="container mx-auto max-w-5xl">
         <header className="text-center mb-12">
-          <p className="text-xs text-green-600 uppercase tracking-widest mb-2">// pricing</p>
+          <p className="text-xs text-cyan-600 uppercase tracking-widest mb-2">// pricing</p>
           <h1 className="text-4xl font-bold text-white mb-3">Simple. Honest.</h1>
           <PromoBar />
           <p className="text-slate-400 max-w-xl mx-auto">
@@ -91,7 +91,7 @@ export default function PricingPage() {
           <h2 className="text-xl font-bold text-white">Questions?</h2>
           <p className="text-sm text-slate-400">
             Pro plan billed monthly via Stripe, cancel anytime. Need higher volume or SSO?{' '}
-            <a href="mailto:info.siva@gmail.com" className="text-green-400 hover:text-green-300 underline">Email us</a>.
+            <a href="mailto:info.siva@gmail.com" className="text-cyan-400 hover:text-cyan-300 underline">Email us</a>.
           </p>
         </section>
       </div>
@@ -119,7 +119,7 @@ function Tier({ name, price, cadence, cta, features, href, external, highlight, 
       disabled={ctaState === 'loading'}
       className={`w-full font-bold text-sm py-2.5 rounded transition ${
         highlight
-          ? 'bg-green-500 hover:bg-green-400 text-black'
+          ? 'bg-cyan-500 hover:bg-cyan-400 text-black'
           : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
       } disabled:opacity-60`}
     >
@@ -129,10 +129,10 @@ function Tier({ name, price, cadence, cta, features, href, external, highlight, 
 
   return (
     <div className={`border rounded-lg p-6 bg-slate-950/60 flex flex-col ${
-      highlight ? 'border-green-500/40 shadow-[0_0_40px_rgba(34,197,94,0.08)]' : 'border-slate-800'
+      highlight ? 'border-cyan-500/40 shadow-[0_0_40px_rgba(34,197,94,0.08)]' : 'border-slate-800'
     }`}>
       {highlight && (
-        <span className="self-start text-[10px] uppercase tracking-widest bg-green-500/15 text-green-400 px-2 py-0.5 rounded-full border border-green-500/30 mb-3">
+        <span className="self-start text-[10px] uppercase tracking-widest bg-cyan-500/15 text-cyan-400 px-2 py-0.5 rounded-full border border-cyan-500/30 mb-3">
           Most popular
         </span>
       )}
@@ -144,7 +144,7 @@ function Tier({ name, price, cadence, cta, features, href, external, highlight, 
       <ul className="space-y-2 mb-6 flex-1">
         {features.map(f => (
           <li key={f} className="flex items-start gap-2 text-sm text-slate-300">
-            <Check className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+            <Check className="w-4 h-4 text-cyan-500 shrink-0 mt-0.5" />
             <span>{f}</span>
           </li>
         ))}
@@ -153,7 +153,7 @@ function Tier({ name, price, cadence, cta, features, href, external, highlight, 
         external ? (
           <a href={href} target="_blank" rel="noopener noreferrer" className="block">
             <button className={`w-full font-bold text-sm py-2.5 rounded inline-flex items-center justify-center gap-2 ${
-              highlight ? 'bg-green-500 hover:bg-green-400 text-black' : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
+              highlight ? 'bg-cyan-500 hover:bg-cyan-400 text-black' : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
             }`}>
               <Github className="w-4 h-4" /> {cta}
             </button>
@@ -161,7 +161,7 @@ function Tier({ name, price, cadence, cta, features, href, external, highlight, 
         ) : (
           <Link href={href} className="block">
             <button className={`w-full font-bold text-sm py-2.5 rounded ${
-              highlight ? 'bg-green-500 hover:bg-green-400 text-black' : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
+              highlight ? 'bg-cyan-500 hover:bg-cyan-400 text-black' : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
             }`}>
               {cta}
             </button>
