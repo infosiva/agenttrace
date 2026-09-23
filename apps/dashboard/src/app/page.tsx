@@ -316,15 +316,15 @@ with client.trace("agent-run") as trace:
               </div>
             ))}
           </div>
-          <div className="mt-6 flex items-center gap-3">
+          <div className="mt-10 flex flex-col items-center gap-2 text-center">
             <a
               href="/dashboard"
               onClick={() => trackEvent('quickstart_get_api_key_clicked')}
-              className="font-mono text-sm px-5 py-2.5 rounded-lg bg-cyan-500 text-black font-bold hover:bg-cyan-400 transition-colors"
+              className="font-mono text-base px-8 py-3.5 rounded-lg bg-cyan-400 text-black font-bold shadow-[0_0_30px_rgba(34,211,238,0.35)] hover:bg-cyan-300 hover:shadow-[0_0_40px_rgba(34,211,238,0.5)] transition-all"
             >
               Get your API key →
             </a>
-            <span className="font-mono text-xs text-cyan-700">free, no card required</span>
+            <span className="font-mono text-xs text-cyan-700">Free, no card required</span>
           </div>
         </section>
 
