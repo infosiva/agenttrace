@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Activity, BarChart3, Clock, DollarSign, Check, Zap, Shield, Code2, TrendingUp, Terminal, AlertCircle, Radio, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { trackEvent } from './PostHogInit';
 import { PublicHeader } from '@/components/PublicHeader';
 
 const LOG_LINES = [
@@ -114,18 +115,23 @@ function MetricsPanel() {
   }, []);
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-      {METRICS.map((m, i) => (
-        <div key={i} className="terminal-panel rounded-lg border border-cyan-900/50 bg-black/80 p-4">
-          <div className="font-mono text-xs text-cyan-600 mb-1 uppercase tracking-widest">{m.label}</div>
-          <div className={`font-mono text-2xl font-bold ${m.color} tabular-nums metric-glow`}>{m.value}</div>
-          <div className="flex items-center gap-1 mt-1">
-            <span className={`font-mono text-xs ${m.delta.startsWith('-') && m.label !== 'P99 Latency' && m.label !== 'Error Rate' ? 'text-red-400' : 'text-cyan-500'}`}>{m.delta}</span>
-            <span className="font-mono text-xs text-gray-600">24h</span>
-            <span className={`ml-auto w-1.5 h-1.5 rounded-full ${tick % 2 === i % 2 ? 'bg-cyan-400' : 'bg-cyan-800'} transition-colors duration-500`} />
+    <div>
+      <div className="flex items-center gap-1.5 mb-2">
+        <span className="font-mono text-[10px] text-cyan-700 uppercase tracking-widest">sample dashboard output</span>
+      </div>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {METRICS.map((m, i) => (
+          <div key={i} className="terminal-panel rounded-lg border border-cyan-900/50 bg-black/80 p-4">
+            <div className="font-mono text-xs text-cyan-600 mb-1 uppercase tracking-widest">{m.label}</div>
+            <div className={`font-mono text-2xl font-bold ${m.color} tabular-nums metric-glow`}>{m.value}</div>
+            <div className="flex items-center gap-1 mt-1">
+              <span className={`font-mono text-xs ${m.delta.startsWith('-') && m.label !== 'P99 Latency' && m.label !== 'Error Rate' ? 'text-red-400' : 'text-cyan-500'}`}>{m.delta}</span>
+              <span className="font-mono text-xs text-gray-600">24h</span>
+              <span className={`ml-auto w-1.5 h-1.5 rounded-full ${tick % 2 === i % 2 ? 'bg-cyan-400' : 'bg-cyan-800'} transition-colors duration-500`} />
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
@@ -230,7 +236,7 @@ export default function HomePage() {
               — for AI agents that actually run.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
-              <Link href="/dashboard" className="font-mono text-sm bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-6 py-3 rounded transition-colors flex items-center gap-2">
+              <Link href="/dashboard" onClick={() => trackEvent('hero_cta_clicked')} className="font-mono text-sm bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-6 py-3 rounded transition-colors flex items-center gap-2">
                 Start free — no card needed
                 <ChevronRight className="w-4 h-4" />
               </Link>
@@ -290,7 +296,7 @@ export default function HomePage() {
           <div className="max-w-2xl mx-auto space-y-4">
             {[
               { step: '01', label: 'Install SDK', code: 'pip install agentlogs-sdk' },
-              { step: '02', label: 'Set endpoint', code: 'export AGENTLOGS_API_KEY="your-key"\nexport AGENTLOGS_PROJECT="my-agent"' },
+              { step: '02', label: 'Set endpoint', code: 'export AGENTLOGS_API_KEY="<your API key>"\nexport AGENTLOGS_PROJECT="my-agent"' },
               { step: '03', label: 'Instrument', code: `from agentlogs import AgentLogs
 
 client = AgentLogs()
@@ -309,6 +315,16 @@ with client.trace("agent-run") as trace:
                 </pre>
               </div>
             ))}
+          </div>
+          <div className="mt-6 flex items-center gap-3">
+            <a
+              href="/dashboard"
+              onClick={() => trackEvent('quickstart_get_api_key_clicked')}
+              className="font-mono text-sm px-5 py-2.5 rounded-lg bg-cyan-500 text-black font-bold hover:bg-cyan-400 transition-colors"
+            >
+              Get your API key →
+            </a>
+            <span className="font-mono text-xs text-cyan-700">free, no card required</span>
           </div>
         </section>
 
@@ -334,7 +350,7 @@ with client.trace("agent-run") as trace:
                   </li>
                 ))}
               </ul>
-              <Link href="/dashboard" className="block text-center font-mono text-sm border border-cyan-800 text-cyan-600 hover:border-cyan-600 hover:text-cyan-400 px-4 py-2.5 rounded transition-colors">
+              <Link href="/dashboard" onClick={() => trackEvent('pricing_free_cta_clicked')} className="block text-center font-mono text-sm border border-cyan-800 text-cyan-600 hover:border-cyan-600 hover:text-cyan-400 px-4 py-2.5 rounded transition-colors">
                 Get started free
               </Link>
             </div>
@@ -430,7 +446,7 @@ with client.trace("agent-run") as trace:
               Open-source observability for AI agents. Free forever for the core. Self-host or use our hosted version.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/dashboard" className="font-mono text-sm bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-8 py-3 rounded transition-colors">
+              <Link href="/dashboard" onClick={() => trackEvent('bottom_cta_clicked')} className="font-mono text-sm bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-8 py-3 rounded transition-colors">
                 Start Free Trial →
               </Link>
               <button

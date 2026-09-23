@@ -1,5 +1,6 @@
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/next';
+import PostHogInit from './PostHogInit';
 import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
@@ -100,6 +101,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Script defer data-domain="agentlogs.app" src="https://plausible.io/js/script.js" strategy="afterInteractive" />
         <FeedbackWidget siteName="AgentLogs" accentColor="#0ea5e9" position="left" />
         <Analytics />
+        <PostHogInit />
       </body>
     </html>
   );
