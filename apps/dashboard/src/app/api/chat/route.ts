@@ -65,7 +65,7 @@ async function getChatReply(messages: Message[]): Promise<string | null> {
   if (process.env.GROQ_API_KEY) {
     try {
       const res = await getGroq().chat.completions.create({
-        model: 'llama-3.1-8b-instant',
+        model: 'qwen/qwen3.8-27b',
         messages,
         max_tokens: 300,
         temperature: 0.7,

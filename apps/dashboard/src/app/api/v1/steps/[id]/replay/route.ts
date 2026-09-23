@@ -50,7 +50,7 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${groqKey}` },
-      body: JSON.stringify({ model: 'llama-3.3-70b-versatile', messages, max_tokens: 1000 }),
+      body: JSON.stringify({ model: 'openai/gpt-oss-120b', messages, max_tokens: 1000 }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data?.error?.message || `groq_${res.status}`);
