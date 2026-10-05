@@ -426,18 +426,9 @@ async function callGeneric(
 }
 
 // ── Anthropic (SDK) ───────────────────────────────────────────────────────────
-async function callAnthropic(q: Quality, system: string, msgs: Msg[], max: number, ec: EdgeCfg) {
-  const key = getKeys('ANTHROPIC')[0]
-  if (!key) throw new Error('ANTHROPIC: no key')
-  const model = (ec.claude_tiers ?? CLAUDE_TIERS)[q] as string
-  // @ts-ignore vendored: @anthropic-ai/sdk not installed here; anthropic is last in the chain and skipped without a key
-  const { default: Anthropic } = await import('@anthropic-ai/sdk')
-  const client = new Anthropic({ apiKey: key })
-  const params: Parameters<typeof client.messages.create>[0] = { model, max_tokens: max, system, messages: msgs }
-  if (q === 'best') (params as unknown as Record<string, unknown>).thinking = { type: 'enabled', budget_tokens: Math.min(8000, Math.floor(max / 2)) }
-  const res = await withTimeout(client.messages.create(params), 'Anthropic') as { content: Array<{ type: string; text?: string }> }
-  const textBlock = res.content.find(b => b.type === 'text')
-  return { text: textBlock?.text ?? res.content[0]?.text ?? '', model }
+async function callAnthropic(_q: Quality, _system: string, _msgs: Msg[], _max: number, _ec: EdgeCfg): Promise<{ text: string; model: string }> {
+  // vendored: paid tier disabled here (free-tier only until paying customers); re-enable by installing @anthropic-ai/sdk
+  throw new Error('ANTHROPIC: disabled in agenttrace (free tier only)')
 }
 
 // ── Core callAI ───────────────────────────────────────────────────────────────
