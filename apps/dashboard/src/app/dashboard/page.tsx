@@ -1,18 +1,22 @@
-import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { auth } from '@/lib/auth';
 import { db, projects, traces } from '@/lib/db';
 import { eq, desc, count, sum, avg, sql } from 'drizzle-orm';
 import { Activity, Clock, DollarSign, TrendingUp, AlertCircle, FolderPlus } from 'lucide-react';
 import IssueInbox from '@/components/IssueInbox';
+import SandboxDashboard from '@/components/SandboxDashboard';
+import { getPlan, countMonthTraces } from '@/lib/plan-db';
+import { PLAN_LIMITS } from '@/lib/plans';
 
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ project?: string }> }) {
   const session = await auth();
-  if (!session?.user?.id) redirect('/login?callbackUrl=/dashboard');
+  if (!session?.user?.id) return <SandboxDashboard />;
 
   const params = await searchParams;
+  const [plan, used] = await Promise.all([getPlan(session.user.id), countMonthTraces(session.user.id)]);
+  const limit = PLAN_LIMITS[plan].tracesPerMonth;
   const userProjects = await db
     .select()
     .from(projects)
@@ -57,7 +61,12 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <header className="mb-8 flex items-center justify-between flex-wrap gap-4">
           <div>
             <p className="text-xs text-cyan-600 uppercase tracking-widest mb-2">// project: {activeProject.slug}</p>
-            <h1 className="text-3xl font-bold text-white">{activeProject.name}</h1>
+            <h1 className="text-3xl font-bold text-white">
+              {activeProject.name}
+              <span className="ml-3 align-middle text-[10px] uppercase tracking-wider px-2 py-0.5 rounded border border-cyan-500/30 bg-cyan-500/10 text-cyan-400">
+                {plan === 'pro' ? 'Pro' : 'Free'}
+              </span>
+            </h1>
             <p className="text-sm text-slate-400 mt-1">
               Logged in as <span className="text-cyan-400">{session.user.email}</span>
             </p>
@@ -74,6 +83,12 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             </select>
           )}
         </header>
+
+        {used >= limit && (
+          <Link href="/pricing" className="block mb-6 rounded-lg border border-yellow-500/40 bg-[#1a1405] text-yellow-300 text-sm px-4 py-3">
+            You&apos;ve used {used.toLocaleString()} of {limit.toLocaleString()} traces this month. New traces are still being saved; upgrade to Pro for {PLAN_LIMITS.pro.tracesPerMonth.toLocaleString()}.
+          </Link>
+        )}
 
         <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <Metric icon={Activity} label="Total traces" value={stats.total.toLocaleString()} accent="text-cyan-400" />
