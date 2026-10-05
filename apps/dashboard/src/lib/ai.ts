@@ -197,7 +197,7 @@ const DEFAULT_ORDER = [
   'openrouter',
   'mistral', 'nvidia', 'kimi', 'deepseek',
   'perplexity', 'xai', 'cohere',
-  'openai', 'anthropic',
+  'anthropic',
 ]
 
 // ── Edge Config (hot-reloads every 5 min) ────────────────────────────────────
@@ -353,7 +353,7 @@ async function callOAICompat(
       'Content-Type': 'application/json',
       ...(key ? { Authorization: `Bearer ${key}` } : {}),
       // OpenRouter requires these for rate-limit tiers
-      ...(baseUrl.includes('openrouter') ? { 'HTTP-Referer': 'https://nammatamil.live', 'X-Title': 'NammaTamil' } : {}),
+      ...(baseUrl.includes('openrouter') ? { 'HTTP-Referer': 'https://agentlogs.app', 'X-Title': 'AgentTrace' } : {}),
     },
     body: JSON.stringify({
       model,

@@ -71,3 +71,14 @@ test('unrelated event types are ignored', async () => {
   const { d } = deps();
   assert.equal(await applyStripeEvent({ id: 'evt_9', type: 'invoice.paid', data: { object: {} } }, d), 'ignored');
 });
+
+test('subscription updated past_due -> free, active -> pro', async () => {
+  const { d, state } = deps();
+  await applyStripeEvent(completed('evt_1', 'u1'), d);
+  const upd = (id: string, status: string) => ({ id, type: 'customer.subscription.updated', data: { object: { customer: 'cus_1', status } } });
+  assert.equal(await applyStripeEvent(upd('evt_u1', 'past_due'), d), 'applied');
+  assert.equal(state.userPlan.get('u1'), 'free');
+  assert.equal(await applyStripeEvent(upd('evt_u2', 'active'), d), 'applied');
+  assert.equal(state.userPlan.get('u1'), 'pro');
+  assert.equal(await applyStripeEvent(upd('evt_u3', 'incomplete'), d), 'ignored');
+});

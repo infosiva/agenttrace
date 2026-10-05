@@ -23,6 +23,10 @@ export async function applyStripeEvent(ev: StripeEventLike, deps: PlanDeps): Pro
       deps.track('checkout_completed', userId);
       result = 'applied';
     }
+  } else if (ev.type === 'customer.subscription.updated') {
+    const customerId = typeof o.customer === 'string' ? o.customer : null;
+    const plan: Plan | null = ['past_due', 'unpaid', 'canceled', 'incomplete_expired'].includes(o.status) ? 'free' : ['active', 'trialing'].includes(o.status) ? 'pro' : null;
+    if (customerId && plan && (await deps.setPlanByCustomer(customerId, plan))) result = 'applied';
   } else if (ev.type === 'customer.subscription.deleted') {
     const customerId = typeof o.customer === 'string' ? o.customer : null;
     if (customerId && (await deps.setPlanByCustomer(customerId, 'free'))) result = 'applied';
