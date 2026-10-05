@@ -31,3 +31,4 @@ Plan: `docs/superpowers/plans/2026-10-05-agenttrace-plans.md` (branch `feat/plan
 
 ## Resume from here if interrupted
 Task 1 done locally (plans.ts + 6 tests green). Next: Task 2.
+- Task 9: vendored src/lib/ai.ts; stubbed missing @/vertical.config as {} and ts-ignored the optional @anthropic-ai/sdk import (smaller diff than adding deps). steps/[id]/replay still calls Groq directly (out of scope).

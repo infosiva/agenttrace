@@ -1,9 +1,9 @@
 import type { SiteStats } from './tracker-client';
+import { callAI } from './ai';
+
+const SYSTEM_PROMPT = 'You are an analytics expert. Respond with just the diagnosis text. No bullet points. No markdown. 2-3 sentences max.';
 
 export async function generateDiagnosis(site: string, stats: SiteStats): Promise<string> {
-  const GROQ_KEY = process.env.GROQ_API_KEY;
-  if (!GROQ_KEY) return 'AI diagnosis unavailable — GROQ_API_KEY not set.';
-
   const prompt = `You are an analytics expert. Analyse this 7-day traffic report for ${site} and give a 2-3 sentence plain-English diagnosis. Focus on what changed, why it likely happened, and one specific recommendation. Be concrete, not generic.
 
 Data:
@@ -16,18 +16,12 @@ Data:
 
 Respond with just the diagnosis text. No bullet points. No markdown. 2-3 sentences max.`;
 
-  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${GROQ_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'qwen/qwen3.8-27b',
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 150,
-      temperature: 0.3,
-    }),
-  });
-
-  if (!res.ok) return 'AI diagnosis temporarily unavailable.';
-  const json = await res.json();
-  return json.choices?.[0]?.message?.content?.trim() ?? 'No diagnosis generated.';
+  try {
+    const t0 = Date.now();
+    const res = await callAI(SYSTEM_PROMPT, [{ role: 'user', content: prompt }], 300, 'fast');
+    console.log(JSON.stringify({ evt: 'ai_diagnosis', provider: res.provider, model: res.model, ms: Date.now() - t0 }));
+    return res.text.trim() || 'No diagnosis generated.';
+  } catch {
+    return 'AI diagnosis temporarily unavailable.';
+  }
 }
