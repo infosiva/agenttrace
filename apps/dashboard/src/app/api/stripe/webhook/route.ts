@@ -11,7 +11,8 @@ const deps: PlanDeps = {
   hasSeen: async id => (await db.select({ id: stripeEvents.id }).from(stripeEvents).where(eq(stripeEvents.id, id))).length > 0,
   markSeen: async id => { await db.insert(stripeEvents).values({ id }).onConflictDoNothing(); },
   setPlanByUser: async (userId, plan, customerId) => {
-    await db.update(users).set({ plan, stripeCustomerId: customerId, planUpdatedAt: new Date() }).where(eq(users.id, userId));
+    const rows = await db.update(users).set({ plan, stripeCustomerId: customerId, planUpdatedAt: new Date() }).where(eq(users.id, userId)).returning({ id: users.id });
+    return rows.length > 0;
   },
   setPlanByCustomer: async (customerId, plan) => {
     const rows = await db.update(users).set({ plan, planUpdatedAt: new Date() }).where(eq(users.stripeCustomerId, customerId)).returning({ id: users.id });

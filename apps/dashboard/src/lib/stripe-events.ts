@@ -4,7 +4,7 @@ export type StripeEventLike = { id: string; type: string; data: { object: Record
 export type PlanDeps = {
   hasSeen(id: string): Promise<boolean>;
   markSeen(id: string): Promise<void>;
-  setPlanByUser(userId: string, plan: Plan, customerId: string): Promise<void>;
+  setPlanByUser(userId: string, plan: Plan, customerId: string): Promise<boolean>;
   setPlanByCustomer(customerId: string, plan: Plan): Promise<boolean>;
   track(event: string, userId: string): void;
 };
@@ -18,8 +18,8 @@ export async function applyStripeEvent(ev: StripeEventLike, deps: PlanDeps): Pro
   if (ev.type === 'checkout.session.completed') {
     const userId = typeof o.client_reference_id === 'string' ? o.client_reference_id : null;
     const customerId = typeof o.customer === 'string' ? o.customer : null;
-    if (userId && customerId) {
-      await deps.setPlanByUser(userId, 'pro', customerId);
+    const ours = o.mode === 'subscription' && o.metadata?.product === 'agenttrace' && o.payment_status !== 'unpaid';
+    if (ours && userId && customerId && (await deps.setPlanByUser(userId, 'pro', customerId))) {
       deps.track('checkout_completed', userId);
       result = 'applied';
     }

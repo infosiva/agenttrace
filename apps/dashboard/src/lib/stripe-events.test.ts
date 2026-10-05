@@ -8,14 +8,14 @@ function deps() {
   const d: PlanDeps = {
     hasSeen: async id => seen.has(id),
     markSeen: async id => { seen.add(id); },
-    setPlanByUser: async (u, p, c) => { state.userPlan.set(u, p); state.customer.set(c, u); },
+    setPlanByUser: async (u, p, c) => { state.userPlan.set(u, p); state.customer.set(c, u); return true; },
     setPlanByCustomer: async (c, p) => { const u = state.customer.get(c); if (!u) return false; state.userPlan.set(u, p); return true; },
     track: e => { state.tracked.push(e); },
   };
   return { d, state };
 }
 const completed = (id: string, ref: string | null, cus = 'cus_1') =>
-  ({ id, type: 'checkout.session.completed', data: { object: { client_reference_id: ref, customer: cus } } });
+  ({ id, type: 'checkout.session.completed', data: { object: { client_reference_id: ref, customer: cus, mode: 'subscription', payment_status: 'paid', metadata: { product: 'agenttrace' } } } });
 
 test('checkout completed -> pro, tracks checkout_completed', async () => {
   const { d, state } = deps();
@@ -34,6 +34,21 @@ test('same event id twice applies once', async () => {
 test('missing client_reference_id is ignored, not thrown', async () => {
   const { d } = deps();
   assert.equal(await applyStripeEvent(completed('evt_2', null), d), 'ignored');
+});
+
+test('session without agenttrace metadata or non-subscription mode is ignored', async () => {
+  const { d, state } = deps();
+  const ev = completed('evt_7', 'u1');
+  assert.equal(await applyStripeEvent({ ...ev, data: { object: { ...ev.data.object, metadata: {} } } }, d), 'ignored');
+  assert.equal(await applyStripeEvent({ ...completed('evt_8', 'u1'), data: { object: { ...ev.data.object, mode: 'payment' } } }, d), 'ignored');
+  assert.equal(state.userPlan.size, 0);
+});
+
+test('setPlanByUser matching no row is ignored, not tracked', async () => {
+  const { d, state } = deps();
+  d.setPlanByUser = async () => false;
+  assert.equal(await applyStripeEvent(completed('evt_6', 'ghost'), d), 'ignored');
+  assert.deepEqual(state.tracked, []);
 });
 
 test('subscription deleted -> free; unknown customer ignored', async () => {
