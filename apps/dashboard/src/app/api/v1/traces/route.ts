@@ -3,6 +3,7 @@ import { db, traces, apiKeys } from '@/lib/db';
 import { bearerToken, resolveApiKey } from '@/lib/api-keys';
 import { API_LIMITER } from '@/lib/rateLimit';
 import { eq } from 'drizzle-orm';
+import { meterIngest } from '@/lib/plan-db';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -25,10 +26,13 @@ export async function POST(req: NextRequest) {
   const name = typeof body.name === 'string' ? body.name : null;
   if (!name) return NextResponse.json({ error: 'name_required' }, { status: 400 });
 
+  const [overLimit] = await meterIngest(key.userId, 1);
+
   const [trace] = await db
     .insert(traces)
     .values({
       projectId: key.projectId,
+      overLimit,
       name,
       status: 'running',
       inputData: (body.input_data as object) ?? null,
@@ -40,5 +44,5 @@ export async function POST(req: NextRequest) {
   // Touch last_used_at on the API key (fire-and-forget)
   void db.update(apiKeys).set({ lastUsedAt: new Date() }).where(eq(apiKeys.id, key.apiKeyId));
 
-  return NextResponse.json({ id: trace.id, started_at: trace.startedAt });
+  return NextResponse.json({ id: trace.id, started_at: trace.startedAt, over_limit: overLimit });
 }

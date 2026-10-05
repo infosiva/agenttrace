@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { db, traces, steps } from '@/lib/db';
 import { bearerToken, resolveApiKey } from '@/lib/api-keys';
 import { API_LIMITER } from '@/lib/rateLimit';
+import { meterIngest } from '@/lib/plan-db';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -37,6 +38,8 @@ export async function POST(req: NextRequest) {
     byOtelTraceId.set(span.traceId, list);
   }
 
+  const overFlags = await meterIngest(key.userId, byOtelTraceId.size);
+  let flagIdx = 0;
   let tracesCreated = 0;
   let stepsCreated = 0;
 
@@ -49,6 +52,7 @@ export async function POST(req: NextRequest) {
       .insert(traces)
       .values({
         projectId: key.projectId,
+        overLimit: overFlags[flagIdx++],
         name: root.name,
         status: hasError ? 'error' : 'success',
         metadata: { source: 'otel', otelTraceId },
@@ -82,7 +86,7 @@ export async function POST(req: NextRequest) {
     stepsCreated += stepRows.length;
   }
 
-  return NextResponse.json({ traces_created: tracesCreated, steps_created: stepsCreated });
+  return NextResponse.json({ traces_created: tracesCreated, steps_created: stepsCreated, over_limit: overFlags.filter(Boolean).length });
 }
 
 // ---- OTLP/JSON shape (subset actually used) ----
