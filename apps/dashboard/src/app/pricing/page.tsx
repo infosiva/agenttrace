@@ -2,9 +2,11 @@
 
 import Link from 'next/link';
 import { Check, Github } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PromoBar from '@/components/PromoBar';
 import { PublicHeader } from '@/components/PublicHeader';
+import { PLAN_LIMITS, PLANNED_FEATURES, planFeatureLines } from '@/lib/plans';
+import { trackEvent } from '../PostHogInit';
 
 const FREE = {
   name: 'Free',
@@ -12,28 +14,15 @@ const FREE = {
   cadence: 'forever',
   cta: 'Sign in →',
   href: '/login',
-  features: [
-    '10,000 trace events / month',
-    '7-day log retention',
-    '1 project',
-    'Community support',
-    'Python + TypeScript SDKs',
-  ],
+  features: planFeatureLines('free'),
 };
 
 const PRO = {
   name: 'Pro',
-  price: '$19',
+  price: `$${PLAN_LIMITS.pro.priceUsd}`,
   cadence: '/ month',
   cta: 'Upgrade to Pro',
-  features: [
-    '1,000,000 trace events / month',
-    '30-day log retention',
-    'Unlimited projects',
-    'Email support (24h SLA)',
-    'Webhook + REST API export',
-    'Team seats (up to 5)',
-  ],
+  features: planFeatureLines('pro'),
   highlight: true,
 };
 
@@ -47,7 +36,6 @@ const SELF_HOST = {
     'Run on your infra (Docker)',
     'Unlimited events, no quota',
     'Your data never leaves your network',
-    'MIT licensed',
     'Community support via GitHub',
   ],
 };
@@ -55,16 +43,25 @@ const SELF_HOST = {
 export default function PricingPage() {
   const [upgrading, setUpgrading] = useState(false);
 
+  const [error, setError] = useState('');
+
+  useEffect(() => trackEvent('pricing_viewed'), []);
+
   async function upgrade() {
+    trackEvent('upgrade_clicked');
     setUpgrading(true);
+    setError('');
     try {
       const res = await fetch('/api/stripe/checkout', { method: 'POST' });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert(data.error || 'Checkout unavailable. Please sign in first.');
+      if (res.status === 401) {
+        window.location.href = '/login?callbackUrl=/pricing';
+        return;
       }
+      const data = await res.json().catch(() => ({}));
+      if (data.url) window.location.href = data.url;
+      else setError(data.error || 'Checkout unavailable. Please try again later.');
+    } catch {
+      setError('Checkout unavailable. Please try again later.');
     } finally {
       setUpgrading(false);
     }
@@ -88,6 +85,17 @@ export default function PricingPage() {
           <Tier {...PRO} onClick={upgrade} ctaState={upgrading ? 'loading' : 'idle'} />
           <Tier {...SELF_HOST} external />
         </div>
+
+        {error && <p role="alert" className="mt-4 text-center text-sm text-red-400">{error}</p>}
+
+        <section className="mt-12 max-w-2xl mx-auto rounded-lg border border-slate-800 bg-slate-950/60 p-6">
+          <h2 className="text-sm font-bold text-white mb-1">Planned, not available yet</h2>
+          <ul className="mt-2 space-y-1 text-sm text-slate-400">
+            {PLANNED_FEATURES.map(f => (
+              <li key={f}>{f} <span className="text-[10px] uppercase tracking-widest text-slate-500 border border-slate-700 rounded-full px-2 py-0.5 ml-1">Planned</span></li>
+            ))}
+          </ul>
+        </section>
 
         <section className="mt-16 max-w-2xl mx-auto text-center space-y-4">
           <h2 className="text-xl font-bold text-white">Questions?</h2>
