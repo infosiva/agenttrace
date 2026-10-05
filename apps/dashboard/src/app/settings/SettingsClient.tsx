@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { trackEvent } from '../PostHogInit';
 import { Copy, Plus, Trash2, Key, FolderPlus, Check, Loader2 } from 'lucide-react';
 
 type Project = { id: string; name: string; slug: string; createdAt: string };
@@ -11,6 +12,7 @@ export function SettingsClient({ initialProjects }: { initialProjects: Project[]
   const [activeProjectId, setActiveProjectId] = useState<string | null>(initialProjects[0]?.id ?? null);
   const [newProjectName, setNewProjectName] = useState('');
   const [creatingProject, setCreatingProject] = useState(false);
+  const [limitReached, setLimitReached] = useState(false);
 
   useEffect(() => {
     if (!activeProjectId && projects.length > 0) setActiveProjectId(projects[0].id);
@@ -19,12 +21,18 @@ export function SettingsClient({ initialProjects }: { initialProjects: Project[]
   async function createProject() {
     if (!newProjectName.trim()) return;
     setCreatingProject(true);
+    setLimitReached(false);
     try {
       const res = await fetch('/api/projects', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ name: newProjectName.trim() }),
       });
+      if (res.status === 402) {
+        setLimitReached(true);
+        trackEvent('limit_reached', { kind: 'projects' });
+        return;
+      }
       if (!res.ok) throw new Error('create_failed');
       const data = await res.json();
       const p: Project = {
@@ -79,6 +87,11 @@ export function SettingsClient({ initialProjects }: { initialProjects: Project[]
             {creatingProject ? <Loader2 className="w-3 h-3 animate-spin" /> : <FolderPlus className="w-3 h-3" />}
             Create project
           </button>
+          {limitReached && (
+            <p className="text-xs text-amber-400">
+              Free plan includes 1 project. <a href="/pricing" className="underline">Upgrade to Pro for unlimited.</a>
+            </p>
+          )}
         </div>
       </aside>
 
