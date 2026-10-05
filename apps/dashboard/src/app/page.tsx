@@ -74,10 +74,10 @@ function LogStream() {
         <span className="w-3 h-3 rounded-full bg-red-500/80" />
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-cyan-500/80" />
-        <span className="ml-3 font-mono text-xs text-cyan-600">agentlogs.app — live trace stream</span>
+        <span className="ml-3 font-mono text-xs text-cyan-600">agentlogs.app — sample trace stream</span>
         <span className="ml-auto flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-cyan-400 live-dot" />
-          <span className="font-mono text-xs text-cyan-500 tracking-widest">LIVE</span>
+          <span className="font-mono text-xs text-cyan-500 tracking-widest">SAMPLE</span>
         </span>
       </div>
       {/* Log body */}
@@ -271,9 +271,9 @@ export default function HomePage() {
               { icon: DollarSign, title: 'Cost Analytics', desc: 'Track token usage and API costs across every agent run' },
               { icon: Clock, title: 'Latency Profiling', desc: 'Find bottlenecks. P50/P95/P99 breakdowns per step' },
               { icon: AlertCircle, title: 'Error Detection', desc: 'Auto-categorize failures. Alert before users notice' },
-              { icon: Zap, title: 'Multi-Framework', desc: 'LangChain, CrewAI, AutoGPT, or your own custom agents' },
+              { icon: Zap, title: 'Multi-Framework', desc: 'LangChain and OpenAI integrations, or instrument your own agents' },
               { icon: Shield, title: 'Self-Hostable', desc: 'Your data never leaves your infra. Docker in 2 minutes' },
-              { icon: Code2, title: 'SDK First', desc: 'Python + TypeScript. 3 lines to full instrumentation' },
+              { icon: Code2, title: 'SDK First', desc: 'Python SDK with decorators for custom agents. TypeScript SDK planned' },
               { icon: TrendingUp, title: 'Production Scale', desc: 'Built on FastAPI + Postgres. Async event ingestion designed to scale' },
             ].map(({ icon: Icon, title, desc }, i) => (
               <div key={i} className="group border border-cyan-900/50 bg-black/60 rounded-lg p-5 hover:border-cyan-700/70 hover:bg-cyan-950/20 transition-all">

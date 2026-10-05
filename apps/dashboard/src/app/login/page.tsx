@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { trackEvent } from '../PostHogInit';
 
 function LoginInner() {
   const params = useSearchParams();
@@ -31,6 +32,7 @@ function LoginInner() {
         setError(result.error);
         setState('error');
       } else {
+        trackEvent('signup_email_sent');
         setState('sent');
       }
     } catch (err) {
