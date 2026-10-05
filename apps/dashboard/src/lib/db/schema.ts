@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, integer, jsonb, primaryKey, uuid, real, index } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, integer, jsonb, primaryKey, uuid, real, index, boolean } from 'drizzle-orm/pg-core';
 import type { AdapterAccount } from 'next-auth/adapters';
 
 // ===== NextAuth tables =====
@@ -10,6 +10,9 @@ export const users = pgTable('user', {
   emailVerified: timestamp('emailVerified', { mode: 'date' }),
   image: text('image'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
+  plan: text('plan').notNull().default('free'), // 'free' | 'pro'; validated by parsePlan (text, not pgEnum: additive, no enum migration)
+  stripeCustomerId: text('stripe_customer_id'),
+  planUpdatedAt: timestamp('plan_updated_at', { mode: 'date' }),
 });
 
 export const accounts = pgTable(
@@ -90,6 +93,7 @@ export const traces = pgTable('traces', {
   startedAt: timestamp('started_at').defaultNow().notNull(),
   endedAt: timestamp('ended_at'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
+  overLimit: boolean('over_limit').notNull().default(false),
 }, t => ({
   projectIdx: index('traces_project_idx').on(t.projectId),
   createdIdx: index('traces_created_idx').on(t.createdAt),
@@ -127,3 +131,8 @@ export const replays = pgTable('replays', {
 }, t => ({
   stepIdx: index('replays_step_idx').on(t.stepId),
 }));
+
+export const stripeEvents = pgTable('stripe_event', {
+  id: text('id').primaryKey(),
+  createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
+});
