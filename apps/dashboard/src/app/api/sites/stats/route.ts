@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { API_LIMITER } from '@/lib/rateLimit';
 
-const TRACKER_API = process.env.TRACKER_API_URL || 'http://31.97.56.148:3098';
+const TRACKER_API = process.env.TRACKER_API_URL || '';
 const STATS_KEY = process.env.TRACKER_STATS_KEY;
 
 export async function GET(req: NextRequest) {

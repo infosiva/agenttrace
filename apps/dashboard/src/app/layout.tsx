@@ -9,6 +9,9 @@ import ChatBot from '@/components/ChatBot';
 import FeedbackWidget from '@/components/FeedbackWidget';
 import { getSiteFlags } from '@/lib/flags';
 import AppNav from '@/components/AppNav';
+import CookieConsent from '@/components/CookieConsent';
+import { AnimatedBg } from '@/components/AnimatedBg';
+import { loadSiteTheme, buildThemeStyleTag, buildGa4Snippet } from '@/lib/theme-loader';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-body' });
 const jetbrains = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono', weight: ['400', '500'] });
@@ -42,8 +45,12 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const flags = await getSiteFlags('agenttrace')
+  const theme = await loadSiteTheme('agenttrace')
+  const themeCss = buildThemeStyleTag(theme, { background: '#0c111a', primary: '#22d3ee', secondary: '#22d3ee' })
+  const ga4 = buildGa4Snippet(theme)
+  const ga4Id = theme?.analytics?.ga4Id
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-layout={theme?.layout?.archetype ?? 'dashboard-console'} suppressHydrationWarning>
       <head>
         <meta name="google-adsense-account" content="ca-pub-4237294630161176" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
@@ -62,36 +69,24 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         }) }} />
         <style dangerouslySetInnerHTML={{ __html: `
           :root {
-            --theme-primary: #00e5ff;
-            --theme-secondary: #22d3ee;
-            --theme-base: #050a0f;
-            --background: #050a0f;
-            --surface-1: #0a1520;
-            --surface-2: #0f1e2e;
-            --foreground: #e0f7fa;
-            --text-2: #80deea;
-            --border-default: rgba(0,229,255,0.12);
-            --border-strong: rgba(0,229,255,0.25);
-            /* legacy aliases for existing components */
-            --bg: #050a0f;
-            --surface: #0a1520;
-            --border: rgba(0,229,255,0.12);
-            --text: #e0f7fa;
-            --accent: #22d3ee;
-            --accent-dim: rgba(57,255,20,0.08);
-            --blue: #00e5ff;
+            --surface-1: #101826; --surface-2: #162133; --foreground: #e2e8f0; --text-2: #cbd5e1;
+            --border-default: rgba(34,211,238,0.14); --border-strong: rgba(34,211,238,0.28);
+            --bg: var(--background, #0c111a); --surface: #101826; --border: rgba(34,211,238,0.14); --text: #e2e8f0; --accent: var(--theme-primary, #22d3ee);
           }
-          html, body { background: #050a0f !important; color: #e0f7fa !important; font-family: var(--font-body, system-ui) !important; }
-          code, pre, .mono { font-family: var(--font-mono, 'JetBrains Mono', monospace) !important; }
-          .glass { background: rgba(5,10,15,0.75) !important; border-color: rgba(0,229,255,0.1) !important; }
-          /* Nav upgrade */
-          nav { background: rgba(5,10,15,0.92) !important; border-bottom: 1px solid rgba(0,229,255,0.12) !important; backdrop-filter: blur(20px); }
+          ${themeCss}
+          html, body { background: var(--background, #0c111a); color: #e2e8f0; font-family: var(--font-body, system-ui); }
+          code, pre, .mono { font-family: var(--font-mono, 'JetBrains Mono', monospace); }
+          @media (prefers-reduced-motion: reduce) { *, ::before, ::after { animation: none !important; transition: none !important; } }
         `}} />
+        {ga4 && ga4Id && <script async src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`} />}
+        {ga4 && <script dangerouslySetInnerHTML={{ __html: ga4 }} />}
       </head>
-      <body className={`${inter.variable} ${jetbrains.variable}`} style={{ background: '#050a0f', color: '#e0f7fa' }}>
-        <div className="aurora aurora-primary" aria-hidden />
-        <div className="aurora aurora-secondary" aria-hidden />
-        <div className="aurora aurora-third" aria-hidden />
+      <body className={`${inter.variable} ${jetbrains.variable}`}>
+        {theme?.layout?.bgAnimation ? <AnimatedBg theme={theme} /> : <>
+          <div className="aurora aurora-primary" aria-hidden />
+          <div className="aurora aurora-secondary" aria-hidden />
+          <div className="aurora aurora-third" aria-hidden />
+        </>}
         <div className="grain" aria-hidden />
         <Providers>
           <AppNav />
@@ -99,9 +94,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {flags.chatbot && <ChatBot />}
         </Providers>
         <Script defer data-domain="agentlogs.app" src="https://plausible.io/js/script.js" strategy="afterInteractive" />
-        <FeedbackWidget siteName="AgentLogs" accentColor="#0ea5e9" position="left" />
+        <FeedbackWidget siteName="AgentLogs" accentColor="#22d3ee" position="left" />
         <Analytics />
         <PostHogInit />
+        <CookieConsent />
       </body>
     </html>
   );

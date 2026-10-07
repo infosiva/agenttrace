@@ -5,6 +5,8 @@ import { API_LIMITER } from '@/lib/rateLimit';
 export async function GET(req: NextRequest) {
   const limited = await API_LIMITER.check(req); if (limited) return limited
   const slug = new URL(req.url).searchParams.get('site');
+  const api = process.env.NEXT_PUBLIC_TRACKER_URL || process.env.TRACKER_API_URL || '';
+  if (!api.startsWith('https://')) return NextResponse.json({ ok: false, error: 'tracker not configured (needs an https TRACKER_API_URL)' }, { status: 503 });
   const site = SITES.find(s => s.slug === slug);
   if (!site) return NextResponse.json({ ok: false, error: 'site not found' }, { status: 404 });
 
@@ -12,7 +14,7 @@ export async function GET(req: NextRequest) {
 // tracker-api analytics — auto-installed by agentlogs.app
 (function() {
   const SITE = '${site.trackerSite}';
-  const API  = 'http://31.97.56.148:3098';
+  const API  = ${JSON.stringify(api)};
   let sid = sessionStorage.getItem('_sid');
   if (!sid) { sid = Math.random().toString(36).slice(2); sessionStorage.setItem('_sid', sid); }
   const t0 = Date.now();

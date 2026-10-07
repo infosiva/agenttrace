@@ -243,3 +243,12 @@ html, body { overflow-x: hidden; }
 .pro-banner {
   animation: slideDown 0.4s ease-out forwards;
 }
+
+/* ── Hub-switchable layout archetypes (html[data-layout]); defaults = dashboard-console ── */
+:root { --radius-card: 12px; --space-section: 4rem; --hero-align: left; }
+html[data-layout="directory-marketplace"], html[data-layout="editorial-longform"] { --radius-card: 6px; --space-section: 5rem; }
+html[data-layout="centered-hero"], html[data-layout="saas-landing"] { --radius-card: 20px; --space-section: 6rem; --hero-align: center; }
+html[data-layout="minimal"] { --radius-card: 2px; --space-section: 3rem; }
+[class*="rounded-xl"], [class*="rounded-2xl"] { border-radius: var(--radius-card); }
+main section:first-of-type { text-align: var(--hero-align); }
+@media (prefers-reduced-motion: reduce) { .ds-bg i, .aurora, .grain { animation: none !important; } }

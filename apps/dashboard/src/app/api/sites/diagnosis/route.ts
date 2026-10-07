@@ -3,7 +3,7 @@ import { AI_LIMITER } from '@/lib/rateLimit';
 import { generateDiagnosis } from '@/lib/ai-diagnosis';
 import type { SiteStats } from '@/lib/tracker-client';
 
-const TRACKER_API = process.env.TRACKER_API_URL || 'http://31.97.56.148:3098';
+const TRACKER_API = process.env.TRACKER_API_URL || '';
 const STATS_KEY = process.env.TRACKER_STATS_KEY;
 
 export async function GET(req: NextRequest) {

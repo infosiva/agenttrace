@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { Check, Github } from 'lucide-react';
-import { useState } from 'react';
 import PromoBar from '@/components/PromoBar';
 import { PublicHeader } from '@/components/PublicHeader';
 
@@ -23,9 +22,10 @@ const FREE = {
 
 const PRO = {
   name: 'Pro',
-  price: '$19',
-  cadence: '/ month',
-  cta: 'Upgrade to Pro',
+  price: 'Planned',
+  cadence: 'not yet available',
+  cta: 'Email to be notified',
+  href: 'mailto:info.siva@gmail.com?subject=AgentLogs%20Pro%20interest',
   features: [
     '1,000,000 trace events / month',
     '30-day log retention',
@@ -53,46 +53,29 @@ const SELF_HOST = {
 };
 
 export default function PricingPage() {
-  const [upgrading, setUpgrading] = useState(false);
-
-  async function upgrade() {
-    setUpgrading(true);
-    try {
-      const res = await fetch('/api/stripe/checkout', { method: 'POST' });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert(data.error || 'Checkout unavailable. Please sign in first.');
-      }
-    } finally {
-      setUpgrading(false);
-    }
-  }
-
   return (
     <main className="min-h-screen bg-[#020617] text-slate-100 font-mono">
       <PublicHeader />
       <div className="container mx-auto max-w-5xl py-16 px-4">
         <header className="text-center mb-12">
-          <p className="text-xs text-cyan-600 uppercase tracking-widest mb-2">// pricing</p>
+          <p className="text-xs text-cyan-300 uppercase tracking-widest mb-2">// pricing</p>
           <h1 className="text-4xl font-bold text-white mb-3">Simple. Honest.</h1>
           <PromoBar />
-          <p className="text-slate-400 max-w-xl mx-auto">
-            Free forever for small projects. Pay only when you need scale. Self-host for $0 if you prefer.
+          <p className="text-slate-300 max-w-xl mx-auto">
+            Free for small projects. Self-host for $0 if you prefer. A paid plan is planned; limits shown are drafts, not final.
           </p>
         </header>
 
         <div className="grid md:grid-cols-3 gap-6">
           <Tier {...FREE} />
-          <Tier {...PRO} onClick={upgrade} ctaState={upgrading ? 'loading' : 'idle'} />
+          <Tier {...PRO} />
           <Tier {...SELF_HOST} external />
         </div>
 
         <section className="mt-16 max-w-2xl mx-auto text-center space-y-4">
           <h2 className="text-xl font-bold text-white">Questions?</h2>
-          <p className="text-sm text-slate-400">
-            Pro plan billed monthly via Stripe, cancel anytime. Need higher volume or SSO?{' '}
+          <p className="text-sm text-slate-300">
+            Paid plan is not live yet, so nothing is billed. Need higher volume or SSO?{' '}
             <a href="mailto:info.siva@gmail.com" className="text-cyan-400 hover:text-cyan-300 underline">Email us</a>.
           </p>
         </section>
