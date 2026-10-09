@@ -54,3 +54,11 @@ Copy fixes done, tracking audited. Next: owner answers on prod PostHog key + des
 ## Runtime-switch + telemetry retrofit (2026-10-06) - files only, nothing committed
 - apps/dashboard: added lib/telemetry.ts, app/api/usage/route.ts (204, JSON-line log, no PII), components/AnimatedBg.tsx, components/CookieConsent.tsx (consent banner + window error/unhandledrejection logging); layout.tsx now sets data-layout, --bg/--accent vars, AnimatedBg (falls back to old aurora when hub bgAnimation unset); globals.css has [data-layout] variants + reduced-motion. `next build` rc=0.
 - Not verified: screenshots 375/1280, live hub theme switching, existing Plausible/PostHog/Vercel Analytics are not consent-gated (left unchanged).
+
+
+## ANIMATED SCOPE (recorded 2026-10-09 sweep)
+- What moves: CSS keyframes already shipped: aurora-drift, blink-cursor, demo-blink, demo-fade, ds-float, ds-shift, fw-spin, grain-shift, matrixRain, pulse-ring, scanline, slideDown.
+- Why: ambient background + entry/press feedback on the product's core action; no motion carries information alone.
+- Trigger: page load (ambient/entry), user press/hover (feedback).
+- Reduced-motion: `prefers-reduced-motion` handling present in the project's styles (verified by scan 2026-10-09).
+- Still open: `/review-animations` run (needs a running app, one at a time).
