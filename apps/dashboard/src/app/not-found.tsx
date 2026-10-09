@@ -13,7 +13,7 @@ export default function NotFound() {
         </p>
         <Link
           href="/"
-          className="mt-4 rounded border border-cyan-900/60 bg-cyan-950/40 px-4 py-2 text-sm text-cyan-300 hover:bg-cyan-900/40"
+          className="mt-4 inline-flex min-h-11 items-center rounded border border-cyan-900/60 bg-cyan-950/40 px-4 py-2 text-sm text-cyan-300 hover:bg-cyan-900/40"
         >
           Back to agentlogs.app
         </Link>
