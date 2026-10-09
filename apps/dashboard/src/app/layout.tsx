@@ -11,7 +11,7 @@ import { getSiteFlags } from '@/lib/flags';
 import AppNav from '@/components/AppNav';
 import CookieConsent from '@/components/CookieConsent';
 import { AnimatedBg } from '@/components/AnimatedBg';
-import { loadSiteTheme, buildThemeStyleTag, buildGa4Snippet } from '@/lib/theme-loader';
+import { loadSiteTheme, buildThemeStyleTag, buildGa4Snippet, resolveGa4Id } from '@/lib/theme-loader';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-body' });
 const jetbrains = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono', weight: ['400', '500'] });
@@ -48,7 +48,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const theme = await loadSiteTheme('agenttrace')
   const themeCss = buildThemeStyleTag(theme, { background: '#0c111a', primary: '#22d3ee', secondary: '#22d3ee' })
   const ga4 = buildGa4Snippet(theme)
-  const ga4Id = theme?.analytics?.ga4Id
+  const ga4Id = resolveGa4Id(theme)
   return (
     <html lang="en" data-layout={theme?.layout?.archetype ?? 'dashboard-console'} suppressHydrationWarning>
       <head>
