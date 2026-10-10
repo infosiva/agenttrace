@@ -95,12 +95,12 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             <table className="w-full text-sm">
               <thead className="bg-black/40 border-b border-slate-800">
                 <tr>
-                  <th className="text-left text-xs text-slate-500 uppercase px-4 py-2 font-semibold">Name</th>
-                  <th className="text-left text-xs text-slate-500 uppercase px-4 py-2 font-semibold">Status</th>
-                  <th className="text-left text-xs text-slate-500 uppercase px-4 py-2 font-semibold">Duration</th>
-                  <th className="text-left text-xs text-slate-500 uppercase px-4 py-2 font-semibold">Tokens</th>
-                  <th className="text-left text-xs text-slate-500 uppercase px-4 py-2 font-semibold">Cost</th>
-                  <th className="text-left text-xs text-slate-500 uppercase px-4 py-2 font-semibold">Time</th>
+                  <th className="text-left text-xs text-slate-400 uppercase px-4 py-2 font-semibold">Name</th>
+                  <th className="text-left text-xs text-slate-400 uppercase px-4 py-2 font-semibold">Status</th>
+                  <th className="text-left text-xs text-slate-400 uppercase px-4 py-2 font-semibold">Duration</th>
+                  <th className="text-left text-xs text-slate-400 uppercase px-4 py-2 font-semibold">Tokens</th>
+                  <th className="text-left text-xs text-slate-400 uppercase px-4 py-2 font-semibold">Cost</th>
+                  <th className="text-left text-xs text-slate-400 uppercase px-4 py-2 font-semibold">Time</th>
                 </tr>
               </thead>
               <tbody>
@@ -111,7 +111,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                     <td className="px-4 py-3 text-slate-400">{t.durationMs ? `${t.durationMs}ms` : '—'}</td>
                     <td className="px-4 py-3 text-slate-400">{t.totalTokens ?? '—'}</td>
                     <td className="px-4 py-3 text-slate-400">{t.totalCost ? `$${t.totalCost.toFixed(4)}` : '—'}</td>
-                    <td className="px-4 py-3 text-slate-500 text-xs">{relativeTime(t.startedAt)}</td>
+                    <td className="px-4 py-3 text-slate-400 text-xs">{relativeTime(t.startedAt)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -127,7 +127,7 @@ function Metric({ icon: Icon, label, value, accent }: { icon: typeof Activity; l
   return (
     <div className="border border-slate-800 bg-slate-950/60 rounded-lg p-4">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs text-slate-500 uppercase tracking-widest">{label}</span>
+        <span className="text-xs text-slate-400 uppercase tracking-widest">{label}</span>
         <Icon className={`w-4 h-4 ${accent}`} />
       </div>
       <div className={`text-2xl font-bold tabular-nums ${accent}`}>{value}</div>
@@ -195,7 +195,7 @@ function FirstTraceEmptyState() {
       <div className="text-center mb-8">
         <TrendingUp className="w-8 h-8 text-slate-700 mx-auto mb-3" />
         <p className="text-sm text-slate-300 mb-1">No traces yet — send your first one.</p>
-        <p className="text-xs text-slate-500">Pick a framework, install, run. Traces show up here live.</p>
+        <p className="text-xs text-slate-400">Pick a framework, install, run. Traces show up here live.</p>
       </div>
       <div className="grid sm:grid-cols-2 gap-3 max-w-xl mx-auto mb-6">
         <QuickstartCard lang="python" cmd="pip install agentlogs" snippet={`from agentlogs import wrap_openai\nclient = wrap_openai(OpenAI())`} />

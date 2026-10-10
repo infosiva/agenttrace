@@ -69,7 +69,7 @@ export default async function SiteDetailPage({ params }: { params: { slug: strin
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 max-w-5xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
-        <Link href="/sites" className="text-slate-500 hover:text-slate-300 text-sm">← All Projects</Link>
+        <Link href="/sites" className="text-slate-400 hover:text-slate-300 text-sm">← All Projects</Link>
         <span className="text-slate-600">/</span>
         <span className="text-sky-400 font-semibold">{site.domain}</span>
         <StatusBadge status={health.status} reason={health.reason} />
@@ -88,7 +88,7 @@ export default async function SiteDetailPage({ params }: { params: { slug: strin
               { label: 'Feedback', value: stats?.feedbackAvgRating ? `★ ${stats.feedbackAvgRating.toFixed(1)}` : '—' },
             ].map(({ label, value }) => (
               <div key={label} className="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
-                <p className="text-xs text-slate-500 uppercase tracking-widest mb-1">{label}</p>
+                <p className="text-xs text-slate-400 uppercase tracking-widest mb-1">{label}</p>
                 <p className="text-xl font-bold text-slate-100">{value}</p>
               </div>
             ))}
@@ -96,7 +96,7 @@ export default async function SiteDetailPage({ params }: { params: { slug: strin
 
           {/* Top pages */}
           <div className="bg-slate-900 border border-slate-800 rounded-lg p-5 mb-6">
-            <h3 className="text-xs text-slate-500 uppercase tracking-widest mb-4">Top Pages (7d)</h3>
+            <h3 className="text-xs text-slate-400 uppercase tracking-widest mb-4">Top Pages (7d)</h3>
             {stats?.topPages.length ? stats.topPages.map(p => (
               <div key={p.path} className="flex justify-between py-2 border-b border-slate-800 last:border-0 text-sm">
                 <span className="text-sky-400 font-mono">{p.path}</span>
@@ -109,7 +109,7 @@ export default async function SiteDetailPage({ params }: { params: { slug: strin
         <div>
           {/* Recent feedback */}
           <div className="bg-slate-900 border border-slate-800 rounded-lg p-5 mb-4">
-            <h3 className="text-xs text-slate-500 uppercase tracking-widest mb-4">Recent Feedback</h3>
+            <h3 className="text-xs text-slate-400 uppercase tracking-widest mb-4">Recent Feedback</h3>
             {stats?.recentFeedback.length ? stats.recentFeedback.slice(0, 5).map((f, i) => (
               <div key={i} className="bg-slate-800 rounded p-3 mb-3 last:mb-0">
                 {f.rating && <div className="text-yellow-400 text-xs mb-1">{'★'.repeat(f.rating)}{'☆'.repeat(5 - f.rating)}</div>}
@@ -122,11 +122,11 @@ export default async function SiteDetailPage({ params }: { params: { slug: strin
           {/* Top events */}
           {stats?.topEvents.length ? (
             <div className="bg-slate-900 border border-slate-800 rounded-lg p-5">
-              <h3 className="text-xs text-slate-500 uppercase tracking-widest mb-4">Top Events</h3>
+              <h3 className="text-xs text-slate-400 uppercase tracking-widest mb-4">Top Events</h3>
               {stats.topEvents.slice(0, 8).map(e => (
                 <div key={e.name} className="flex justify-between py-1.5 text-sm border-b border-slate-800 last:border-0">
                   <span className="text-slate-300">{e.name}</span>
-                  <span className="text-slate-500">{e.count}</span>
+                  <span className="text-slate-400">{e.count}</span>
                 </div>
               ))}
             </div>

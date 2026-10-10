@@ -66,12 +66,12 @@ export default async function TracesPage({ searchParams }: { searchParams: Promi
             <table className="w-full text-sm">
               <thead className="bg-black/40 border-b border-slate-800">
                 <tr>
-                  <th className="text-left text-xs uppercase text-slate-500 px-4 py-2 font-semibold">Name</th>
-                  <th className="text-left text-xs uppercase text-slate-500 px-4 py-2 font-semibold">Status</th>
-                  <th className="text-left text-xs uppercase text-slate-500 px-4 py-2 font-semibold">Duration</th>
-                  <th className="text-left text-xs uppercase text-slate-500 px-4 py-2 font-semibold">Tokens</th>
-                  <th className="text-left text-xs uppercase text-slate-500 px-4 py-2 font-semibold">Cost</th>
-                  <th className="text-left text-xs uppercase text-slate-500 px-4 py-2 font-semibold">Started</th>
+                  <th className="text-left text-xs uppercase text-slate-400 px-4 py-2 font-semibold">Name</th>
+                  <th className="text-left text-xs uppercase text-slate-400 px-4 py-2 font-semibold">Status</th>
+                  <th className="text-left text-xs uppercase text-slate-400 px-4 py-2 font-semibold">Duration</th>
+                  <th className="text-left text-xs uppercase text-slate-400 px-4 py-2 font-semibold">Tokens</th>
+                  <th className="text-left text-xs uppercase text-slate-400 px-4 py-2 font-semibold">Cost</th>
+                  <th className="text-left text-xs uppercase text-slate-400 px-4 py-2 font-semibold">Started</th>
                 </tr>
               </thead>
               <tbody>
@@ -100,7 +100,7 @@ export default async function TracesPage({ searchParams }: { searchParams: Promi
                     <td className="px-4 py-3 text-slate-400">{r.durationMs ? `${r.durationMs}ms` : '—'}</td>
                     <td className="px-4 py-3 text-slate-400">{r.totalTokens ?? '—'}</td>
                     <td className="px-4 py-3 text-slate-400">{r.totalCost ? `$${r.totalCost.toFixed(4)}` : '—'}</td>
-                    <td className="px-4 py-3 text-slate-500 text-xs">{r.startedAt.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-slate-400 text-xs">{r.startedAt.toLocaleString()}</td>
                   </tr>
                   );
                 })}

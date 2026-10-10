@@ -205,7 +205,7 @@ function CodeBlock({ code, language }: { code: string; language: string }) {
   return (
     <div className="border border-slate-800 rounded-lg bg-black/80 overflow-hidden">
       <div className="flex items-center gap-2 px-4 py-2 bg-slate-900/80 border-b border-slate-800">
-        <span className="text-xs text-slate-500 uppercase tracking-widest">{language}</span>
+        <span className="text-xs text-slate-400 uppercase tracking-widest">{language}</span>
       </div>
       <pre className="p-4 overflow-x-auto max-w-full">
         <code className="text-xs text-cyan-300 whitespace-pre">{code}</code>

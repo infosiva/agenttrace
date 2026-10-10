@@ -8,7 +8,7 @@ interface ProjectCardProps {
 }
 
 function trendColor(trend: number | null) {
-  if (trend === null) return 'text-slate-500';
+  if (trend === null) return 'text-slate-400';
   if (trend > 0) return 'text-green-400';
   return 'text-red-400';
 }

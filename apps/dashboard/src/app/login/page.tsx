@@ -61,7 +61,7 @@ function LoginInner() {
               <span className="text-cyan-400">{email || 'your inbox'}</span>.
               Click it to continue.
             </p>
-            <p className="text-xs text-slate-500 pt-2">
+            <p className="text-xs text-slate-400 pt-2">
               Link expires in 24 hours. Didn&apos;t arrive?{' '}
               <button
                 type="button"
@@ -88,7 +88,7 @@ function LoginInner() {
                   Email
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
                     id="email"
                     type="email"
@@ -106,7 +106,7 @@ function LoginInner() {
               <button
                 type="submit"
                 disabled={state === 'sending' || !email}
-                className="w-full inline-flex items-center justify-center gap-2 bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-700 disabled:text-slate-500 text-black font-bold text-sm py-2.5 rounded-md transition"
+                className="w-full inline-flex items-center justify-center gap-2 bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-700 disabled:text-slate-400 text-black font-bold text-sm py-2.5 rounded-md transition"
               >
                 {state === 'sending' ? (
                   <>
@@ -128,7 +128,7 @@ function LoginInner() {
         )}
       </div>
 
-      <p className="text-xs text-slate-500 text-center mt-6">
+      <p className="text-xs text-slate-400 text-center mt-6">
         By signing in, you agree to our{' '}
         <Link href="/terms" className="text-slate-400 hover:text-cyan-400 underline">Terms</Link>
         {' '}and{' '}
@@ -143,7 +143,7 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen bg-[#020617] text-slate-100 font-mono flex flex-col">
       <div className="flex-1 flex items-center justify-center px-4 py-16">
-        <Suspense fallback={<div className="text-slate-500">Loading...</div>}>
+        <Suspense fallback={<div className="text-slate-400">Loading...</div>}>
           <LoginInner />
         </Suspense>
       </div>

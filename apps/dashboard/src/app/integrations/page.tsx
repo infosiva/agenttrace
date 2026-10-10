@@ -124,7 +124,7 @@ function IntegrationCard({ integration }: { integration: Integration }) {
           <span className="text-3xl">{integration.logo}</span>
           <div>
             <h3 className="font-bold text-white">{integration.name}</h3>
-            <span className="text-xs text-slate-500">{integration.category}</span>
+            <span className="text-xs text-slate-400">{integration.category}</span>
           </div>
         </div>
         <span className={`text-[10px] uppercase tracking-wide px-2 py-1 rounded-full font-medium ${statusStyles[integration.status]}`}>

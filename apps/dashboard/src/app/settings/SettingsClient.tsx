@@ -47,7 +47,7 @@ export function SettingsClient({ initialProjects }: { initialProjects: Project[]
         <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Projects</h2>
         <div className="space-y-1">
           {projects.length === 0 && (
-            <p className="text-xs text-slate-500 italic">No projects yet. Create one →</p>
+            <p className="text-xs text-slate-400 italic">No projects yet. Create one →</p>
           )}
           {projects.map(p => (
             <button
@@ -74,7 +74,7 @@ export function SettingsClient({ initialProjects }: { initialProjects: Project[]
           <button
             onClick={createProject}
             disabled={creatingProject || !newProjectName.trim()}
-            className="w-full inline-flex items-center justify-center gap-2 bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-800 disabled:text-slate-500 text-black font-semibold text-xs py-2 rounded"
+            className="w-full inline-flex items-center justify-center gap-2 bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-800 disabled:text-slate-400 text-black font-semibold text-xs py-2 rounded"
           >
             {creatingProject ? <Loader2 className="w-3 h-3 animate-spin" /> : <FolderPlus className="w-3 h-3" />}
             Create project
@@ -87,7 +87,7 @@ export function SettingsClient({ initialProjects }: { initialProjects: Project[]
           <KeysPanel projectId={activeProjectId} />
         ) : (
           <div className="border border-slate-800 rounded-lg p-12 text-center bg-slate-950/60">
-            <p className="text-slate-500">Create a project on the left to get started.</p>
+            <p className="text-slate-400">Create a project on the left to get started.</p>
           </div>
         )}
       </section>
@@ -151,7 +151,7 @@ function KeysPanel({ projectId }: { projectId: string }) {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-bold text-white">API Keys</h2>
-          <p className="text-xs text-slate-500 mt-1">Use these to authenticate SDK requests.</p>
+          <p className="text-xs text-slate-400 mt-1">Use these to authenticate SDK requests.</p>
         </div>
         <button
           onClick={createKey}
@@ -178,7 +178,7 @@ function KeysPanel({ projectId }: { projectId: string }) {
               {copied ? 'Copied' : 'Copy'}
             </button>
           </div>
-          <p className="text-xs text-slate-500 mt-2">
+          <p className="text-xs text-slate-400 mt-2">
             Set as <code className="text-cyan-400">AGENTLOGS_API_KEY</code> in your environment.
           </p>
         </div>
@@ -186,12 +186,12 @@ function KeysPanel({ projectId }: { projectId: string }) {
 
       <div className="border border-slate-800 rounded-lg bg-slate-950/60 overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-slate-500 text-sm">
+          <div className="p-8 text-center text-slate-400 text-sm">
             <Loader2 className="w-4 h-4 animate-spin mx-auto mb-2" />
             Loading keys...
           </div>
         ) : keys.length === 0 ? (
-          <div className="p-8 text-center text-slate-500 text-sm">
+          <div className="p-8 text-center text-slate-400 text-sm">
             <Key className="w-6 h-6 mx-auto mb-2 opacity-40" />
             No API keys yet. Create one to start sending traces.
           </div>
@@ -199,10 +199,10 @@ function KeysPanel({ projectId }: { projectId: string }) {
           <table className="w-full text-sm">
             <thead className="border-b border-slate-800 bg-black/40">
               <tr>
-                <th className="text-left text-xs uppercase text-slate-500 px-4 py-2 font-semibold">Name</th>
-                <th className="text-left text-xs uppercase text-slate-500 px-4 py-2 font-semibold">Prefix</th>
-                <th className="text-left text-xs uppercase text-slate-500 px-4 py-2 font-semibold">Last used</th>
-                <th className="text-left text-xs uppercase text-slate-500 px-4 py-2 font-semibold">Created</th>
+                <th className="text-left text-xs uppercase text-slate-400 px-4 py-2 font-semibold">Name</th>
+                <th className="text-left text-xs uppercase text-slate-400 px-4 py-2 font-semibold">Prefix</th>
+                <th className="text-left text-xs uppercase text-slate-400 px-4 py-2 font-semibold">Last used</th>
+                <th className="text-left text-xs uppercase text-slate-400 px-4 py-2 font-semibold">Created</th>
                 <th className="px-4 py-2"></th>
               </tr>
             </thead>
@@ -211,16 +211,16 @@ function KeysPanel({ projectId }: { projectId: string }) {
                 <tr key={k.id} className="border-b border-slate-900 last:border-0">
                   <td className="px-4 py-3 text-slate-200">{k.name}</td>
                   <td className="px-4 py-3 text-cyan-400 font-mono text-xs">{k.keyPrefix}…</td>
-                  <td className="px-4 py-3 text-slate-500 text-xs">
+                  <td className="px-4 py-3 text-slate-400 text-xs">
                     {k.lastUsedAt ? new Date(k.lastUsedAt).toLocaleString() : '—'}
                   </td>
-                  <td className="px-4 py-3 text-slate-500 text-xs">
+                  <td className="px-4 py-3 text-slate-400 text-xs">
                     {new Date(k.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3 text-right">
                     <button
                       onClick={() => deleteKey(k.id)}
-                      className="text-slate-500 hover:text-red-400"
+                      className="text-slate-400 hover:text-red-400"
                       title="Revoke"
                     >
                       <Trash2 className="w-4 h-4" />

@@ -20,7 +20,7 @@ export function AttentionCard({ site, health, views }: AttentionCardProps) {
             {views === 0 ? 'ZERO TRAFFIC' : health.reason.toUpperCase()}
           </span>
         </div>
-        <p className="text-slate-500 text-xs">{health.reason}</p>
+        <p className="text-slate-400 text-xs">{health.reason}</p>
         {views > 0 && <p className="text-red-400 font-bold mt-2">{views.toLocaleString()} views</p>}
         {health.status === 'unknown' && (
           <a

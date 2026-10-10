@@ -124,7 +124,7 @@ function Tier({ name, price, cadence, cta, features, href, external, highlight, 
       <h3 className="text-lg font-bold text-white">{name}</h3>
       <div className="mt-2 mb-6">
         <span className="text-3xl font-bold text-white tabular-nums">{price}</span>
-        <span className="text-sm text-slate-500 ml-1">{cadence}</span>
+        <span className="text-sm text-slate-400 ml-1">{cadence}</span>
       </div>
       <ul className="space-y-2 mb-6 flex-1">
         {features.map(f => (

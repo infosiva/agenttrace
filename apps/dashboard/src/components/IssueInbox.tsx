@@ -70,10 +70,10 @@ function IssueRow({ issue }: { issue: Issue }) {
         className="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-slate-900/50 transition-colors"
       >
         {expanded
-          ? <ChevronDown className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-          : <ChevronRight className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+          ? <ChevronDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+          : <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
         }
-        <span className="font-mono text-[10px] text-slate-500 shrink-0 w-20 truncate" title={issue.traceId}>
+        <span className="font-mono text-[10px] text-slate-400 shrink-0 w-20 truncate" title={issue.traceId}>
           {issue.traceId}
         </span>
         <span className="font-mono text-xs text-slate-400 grow truncate">{issue.errorType}</span>
@@ -88,7 +88,7 @@ function IssueRow({ issue }: { issue: Issue }) {
         <div className="px-4 pb-4 ml-6 space-y-2">
           <p className="font-mono text-xs text-slate-300">{issue.summary}</p>
           {issue.traceContext && (
-            <pre className="font-mono text-[10px] text-slate-500 bg-black/60 border border-slate-800 rounded px-3 py-2 overflow-x-auto whitespace-pre-wrap">
+            <pre className="font-mono text-[10px] text-slate-400 bg-black/60 border border-slate-800 rounded px-3 py-2 overflow-x-auto whitespace-pre-wrap">
               {issue.traceContext}
             </pre>
           )}
@@ -130,7 +130,7 @@ export default function IssueInbox({ projectId }: { projectId?: string }) {
         )}
       </div>
       {issues.length === 0 ? (
-        <div className="p-8 text-center font-mono text-sm text-slate-500">No issues — all clear.</div>
+        <div className="p-8 text-center font-mono text-sm text-slate-400">No issues — all clear.</div>
       ) : (
         <div>
           {issues.map(issue => (
